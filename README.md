@@ -1,12 +1,13 @@
 # **Prospectivity for "U - REE" - Peru Central**
 
-![](recursos/portada.png)
+![Prospectivity for "U - REE" - Peru Central](recursos/portada.png)
 
 [![Pruebas](https://github.com/HeisenbergPy/Prospectivity-for-U-REE-Peru-Central/actions/workflows/pruebas.yml/badge.svg)](https://github.com/HeisenbergPy/Prospectivity-for-U-REE-Peru-Central/actions/workflows/pruebas.yml)
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 ![Jupyter](https://img.shields.io/badge/Jupyter-cuadernos-F37626?logo=jupyter&logoColor=white)
 ![uv](https://img.shields.io/badge/entorno-uv-de5fe9)
 ![Licencia](https://img.shields.io/badge/licencia-MIT-forestgreen)
+[![Datos](https://img.shields.io/badge/datos-Google%20Drive-4285F4?logo=googledrive&logoColor=white)](https://drive.google.com/drive/folders/17-0XKJ0bYfI-5cKTVCm1R5XPFr9zsT3t?usp=drive_link)
 
 **Autores:** Carlos Manuel Gutiérrez Cruzado y Félix Bryan Cordero Escobar<br>
 **Curso:** Geocomputación (1GEO20), Pontificia Universidad Católica del Perú, semestre 2026-II
@@ -14,30 +15,32 @@
 # **1. Introducción**
 
 ---
-El Perú no tiene radiometría aérea pública, que es la herramienta habitual para buscar uranio. Para explorar hay que
-juntar datos de varias instituciones (INGEMMET, el Instituto Peruano de Energía Nuclear y modelos globales) que
-muestrearon en años distintos y con laboratorios distintos. En este trabajo comprobamos si esas fuentes **concuerdan**
-antes de usarlas juntas: comparamos **una misma variable obtenida de fuentes distintas** y analizamos estadísticamente
-la **relación entre variables**.
+El Perú no dispone de radiometría aérea pública, la herramienta habitual en la exploración de uranio. La información
+disponible proviene de varias instituciones (INGEMMET, el Instituto Peruano de Energía Nuclear y modelos globales),
+que muestrearon en épocas distintas y con laboratorios y métodos distintos. Este trabajo evalúa si esas fuentes
+**concuerdan** antes de integrarlas: compara **una misma variable obtenida de fuentes distintas** y analiza
+estadísticamente la **relación entre variables**.
 
-Las preguntas del trabajo son:
+Preguntas del trabajo:
 
 1. ¿El modelo global de gravedad XGM2019e reproduce la anomalía de Bouguer medida en las estaciones de INGEMMET?
 2. ¿El uranio en roca medido por distintas instituciones es comparable?
 3. ¿Con qué variables se relaciona el uranio (Th, SiO₂, Be en sedimentos y gravedad)?
 
 **Área de estudio:** rectángulo de 110 × 140 km (15 400 km²) en la Cordillera Oriental de Junín y Pasco, en
-WGS 84 / UTM 18S (EPSG:32718). **Periodo:** los datos se tomaron entre 1991 y 2024 según la fuente.
+WGS 84 / UTM 18S (EPSG:32718). **Periodo:** los datos se adquirieron entre 1991 y 2024 según la fuente.
 
 # **2. Datos**
 
 ---
-Todos los datos están en la carpeta [`datos/`](datos/) (18 MB), así que el repositorio funciona apenas se clona. La
-copia en Google Drive es idéntica: **[enlace por agregar]**.
+Los datos crudos del área de estudio se incluyen en la carpeta [`datos/`](datos/) (18 MB), de modo que el
+repositorio puede ejecutarse inmediatamente después de clonarlo. La carpeta de
+[Google Drive](https://drive.google.com/drive/folders/17-0XKJ0bYfI-5cKTVCm1R5XPFr9zsT3t?usp=drive_link) contiene una
+copia idéntica.
 
-Cada archivo tiene su fuente, su forma de acceso y su huella sha256 en [`datos/manifiesto.csv`](datos/manifiesto.csv).
-La huella permite comprobar que los datos son los mismos que se descargaron. Los campos, las licencias y cómo se obtuvo
-cada archivo están en [`datos/LEEME.md`](datos/LEEME.md).
+El archivo [`datos/manifiesto.csv`](datos/manifiesto.csv) registra la fuente, la forma de acceso y la huella sha256
+de cada archivo, lo que permite verificar que los datos no fueron modificados. Los campos, las licencias y el
+procedimiento de obtención se describen en [`datos/LEEME.md`](datos/LEEME.md).
 
 | Variable | Fuente | Formato | Acceso | En el área |
 |---|---|---|---|---:|
@@ -51,13 +54,11 @@ cada archivo están en [`datos/LEEME.md`](datos/LEEME.md).
 | Be, La, Y en sedimentos | Sedimentos de quebrada de INGEMMET | Shapefile | GEOCATMIN | 720 muestras |
 | Elevación | Copernicus DEM GLO-90 | GeoTIFF | Descarga libre (AWS) | 100 % |
 
-![](figuras/GC01_05_uranio_mapa_fuentes.png)
-
 # **3. Instalación**
 
 ---
-Se necesita `git` y [uv](https://docs.astral.sh/uv/), el gestor de entornos de Python. uv instala Python 3.12 y las
-versiones exactas de las librerías que están en `uv.lock`, así que el entorno es el mismo en cualquier computadora.
+Se requiere `git` y [uv](https://docs.astral.sh/uv/), el gestor de entornos de Python. uv instala Python 3.12 y las
+versiones exactas de las librerías registradas en `uv.lock`, de modo que el entorno es idéntico en cualquier equipo.
 
 Clonar el repositorio:
 
@@ -72,42 +73,34 @@ Crear el entorno:
 uv sync
 ```
 
-Comprobar que todo funciona (pruebas de las funciones y de los datos):
+Ejecutar las pruebas de las funciones y de los datos:
 
 ```bash
 uv run pytest
 ```
 
-**Sin uv:** en un entorno de Python 3.12 también funciona con:
+**Sin uv:** en un entorno de Python 3.12, el paquete se instala con:
 
 ```bash
 pip install -e . pytest
 ```
 
-# **4. Cuadernos**
+# **4. Estructura y flujo de trabajo**
 
 ---
-El análisis está dividido en cuadernos de Jupyter, uno por etapa, en la carpeta [`cuadernos/`](cuadernos/). Las
-funciones que usan están en el paquete [`geocomp/`](geocomp/) y cada una tiene sus pruebas en [`tests/`](tests/).
+![Flujo de trabajo del repositorio](recursos/flujo.png)
+
+El análisis se organiza en cuadernos de Jupyter, uno por etapa, en la carpeta [`cuadernos/`](cuadernos/). Las
+funciones que emplean se encuentran en el paquete [`geocomp/`](geocomp/), y cada una cuenta con pruebas en
+[`tests/`](tests/).
 
 | Cuaderno | Contenido | Entrega | Estado |
 |---|---|---|:---:|
-| [GC01 - Acceso a los datos y exploración](cuadernos/GC01_avance_exploracion.ipynb) | Verificación de los datos, fuentes y forma de acceso, primera comparación de fuentes, cobertura y periodo | Parcial (16/10/2026) | ✔️ |
+| [GC01 - Acceso a los datos y exploración](cuadernos/GC01_avance_exploracion.ipynb) | Integridad de los datos, fuentes y forma de acceso, primera comparación de fuentes, cobertura y periodo | Parcial (16/10/2026) | ✔️ |
 | GC02 - Validación de fuentes | Gravedad: estaciones frente a modelo según el relieve. Uranio: pares por método analítico y por litología | Final (22/11/2026) | ⏳ |
 | GC03 - Relación entre variables | U frente a Th, SiO₂ y Be en sedimentos; gravedad en zonas de U alto y bajo | Final (22/11/2026) | ⏳ |
 
-Así se conectan las partes del repositorio:
-
-```mermaid
-flowchart LR
-    A[(datos/<br>SHP y GeoTIFF<br>+ manifiesto sha256)] --> B[geocomp/<br>acceso, lectura,<br>espacial, estadística,<br>gráficos]
-    B --> C[cuadernos/<br>GC01, GC02, GC03]
-    C --> D[figuras/<br>PNG 300 dpi y SVG]
-    T[tests/<br>pytest] -.prueba.-> B
-    T -.prueba.-> A
-```
-
-| Módulo de `geocomp/` | Para qué sirve |
+| Módulo de `geocomp/` | Función |
 |---|---|
 | `rutas.py` | Rutas de los archivos y sistemas de coordenadas |
 | `acceso.py` | Consulta y descarga desde GEOCATMIN; verificación de los archivos con su huella sha256 |
@@ -116,7 +109,7 @@ flowchart LR
 | `estadistica.py` | Métricas de acuerdo entre fuentes (sesgo, RMS, correlación) y resúmenes por grupo |
 | `graficos.py` | Estilo de las figuras, mapas en UTM con norte y escala, números con coma decimal |
 
-# **5. Ejecutar los cuadernos**
+# **5. Ejecución**
 
 ---
 Abrir Jupyter en el entorno del proyecto:
@@ -125,31 +118,33 @@ Abrir Jupyter en el entorno del proyecto:
 uv run jupyter notebook
 ```
 
-Para ejecutar un cuaderno completo desde la terminal sin modificar el original (el resultado queda en `salida/`):
+Ejecutar un cuaderno completo desde la terminal sin modificar el original (el resultado se guarda en `salida/`):
 
 ```bash
 uv run jupyter nbconvert --to notebook --execute cuadernos/GC01_avance_exploracion.ipynb --output-dir salida
 ```
 
-Cada vez que se sube un cambio, GitHub Actions clona el repositorio desde cero, crea el entorno, corre las pruebas y
-ejecuta el cuaderno GC01 completo ([`.github/workflows/pruebas.yml`](.github/workflows/pruebas.yml)).
+En cada cambio, GitHub Actions clona el repositorio desde cero, crea el entorno, ejecuta las pruebas y ejecuta el
+cuaderno GC01 completo ([`.github/workflows/pruebas.yml`](.github/workflows/pruebas.yml)). Las imágenes de este
+README se generan como se indica en [`recursos/LEEME.md`](recursos/LEEME.md).
 
-La imagen de portada se genera con `uv run python recursos/portada.py`.
-
-# **6. Primeros resultados (GC01)**
+# **6. Resultados preliminares**
 
 ---
-**Gravedad.** El modelo XGM2019e reproduce el patrón regional de las estaciones (r = 0,80), pero da en promedio
-12 mGal más y su error típico (RMS) es de 44,7 mGal, así que a escala local no reemplaza a las estaciones. Sobre los
-3000 m hay dos grupos de estaciones vecinas con diferencias de signo opuesto, que vamos a revisar en GC02.
+![Resultados preliminares de GC01](recursos/resultados.png)
 
-![](figuras/GC01_03_bouguer_comparacion.png)
+**Gravedad.** El modelo XGM2019e reproduce el patrón regional de las estaciones (r = 0,80), aunque supera en promedio
+en 12 mGal a las mediciones y su error típico (RMS) es de 44,7 mGal; a escala local no reemplaza a las estaciones.
+Por encima de 3000 m, dos grupos de estaciones vecinas presentan diferencias de signo opuesto, lo que sugiere un
+efecto de la campaña de medición que se evaluará en GC02.
 
-**Uranio.** Las fuentes regionales tienen medianas parecidas (3 a 4 ppm), cerca del promedio de la corteza superior.
-El IPEN tiene una mediana de 15,5 ppm porque muestreó donde ya conocía indicios de uranio: es un sesgo de muestreo, no
-un problema de laboratorio.
+![Comparación entre el modelo XGM2019e y las estaciones de INGEMMET](figuras/GC01_03_bouguer_comparacion.png)
 
-![](figuras/GC01_06_uranio_distribucion_fuentes.png)
+**Uranio.** Las fuentes regionales presentan medianas similares (2,9 a 4,0 ppm), próximas al promedio de la corteza
+superior. La mediana del IPEN (15,5 ppm) refleja un sesgo de muestreo hacia zonas con indicios conocidos, no una
+diferencia de laboratorio.
+
+![Distribución del U en roca por fuente](figuras/GC01_06_uranio_distribucion_fuentes.png)
 
 # **7. Referencias**
 
@@ -165,6 +160,6 @@ un problema de laboratorio.
 # **8. Licencia y cita**
 
 ---
-El código está bajo la licencia MIT (ver [`LICENSE`](LICENSE)). Los datos conservan la licencia y la cita de su
-fuente original (ver [`datos/LEEME.md`](datos/LEEME.md)). Para citar este trabajo, usa el botón *Cite this repository*
-de GitHub o el archivo [`CITATION.cff`](CITATION.cff).
+El código se distribuye bajo la licencia MIT (ver [`LICENSE`](LICENSE)). Los datos conservan la licencia y la cita de
+su fuente original (ver [`datos/LEEME.md`](datos/LEEME.md)). Para citar este trabajo puede usarse la opción
+*Cite this repository* de GitHub o el archivo [`CITATION.cff`](CITATION.cff).

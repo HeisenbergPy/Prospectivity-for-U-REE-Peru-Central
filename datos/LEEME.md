@@ -5,6 +5,8 @@ y la conversión se hacen en el código (`geocomp/lectura.py`). Cada archivo tie
 `manifiesto.csv`; la prueba `tests/test_datos.py` y la sección 2 del cuaderno GC01 comprueban que no hayan
 cambiado.
 
+Copia idéntica en Google Drive: https://drive.google.com/drive/folders/17-0XKJ0bYfI-5cKTVCm1R5XPFr9zsT3t?usp=drive_link
+
 | Carpeta | Archivo | Contenido |
 |---|---|---|
 | `area_estudio/` | `AOI.shp` | Rectángulo de 110 × 140 km en UTM 18S (440–550 km E, 8700–8840 km N) |
