@@ -53,3 +53,17 @@ def resumen_por_grupo(tabla, valor, grupo, orden=None):
                       'P25': v.quantile(0.25), 'P75': v.quantile(0.75), 'min': v.min(), 'max': v.max()})
     resumen = pd.DataFrame(filas).set_index(grupo)
     return resumen.reindex(orden) if orden is not None else resumen
+
+
+def mediana_por_tramo(tabla, x, y, tramos, minimo=3):
+    """Mediana y rango intercuartil (Q1-Q3) de `y` en tramos de `x` (p. ej., U en tramos de 5 % de SiO2).
+
+    Solo se conservan los tramos con al menos `minimo` valores. Devuelve una tabla con la mediana (`med`), los
+    cuartiles (`q1`, `q3`), el número de valores (`n`) y el centro del tramo (`x`), lista para dibujar la tendencia.
+    """
+    datos = tabla[[x, y]].dropna()
+    resumen = datos.groupby(pd.cut(datos[x], tramos), observed=True)[y].agg(
+        med='median', q1=lambda v: v.quantile(0.25), q3=lambda v: v.quantile(0.75), n='size')
+    resumen = resumen[resumen.n >= minimo].copy()
+    resumen['x'] = [tramo.mid for tramo in resumen.index]
+    return resumen

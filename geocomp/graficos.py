@@ -6,12 +6,15 @@ import cmcrameri  # noqa: F401  (registra los mapas de color científicos 'cmc.*
 import matplotlib.patheffects as pe
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import shapely
 from cycler import cycler
 from matplotlib.cm import ScalarMappable
-from matplotlib.colors import LightSource, ListedColormap, Normalize
-from matplotlib.ticker import FuncFormatter
+from matplotlib.colors import LightSource, ListedColormap, Normalize, to_rgb
+from matplotlib.ticker import FuncFormatter, NullFormatter
+from matplotlib.transforms import ScaledTranslation
 from matplotlib_scalebar.scalebar import ScaleBar
+from scipy.stats import gaussian_kde
 
 from .rutas import FIGURAS
 
@@ -196,6 +199,147 @@ def rotular_lugares(ax, puntos, campo, aoi, tamano=8.5, negrita=True, color='bla
         ax.annotate(nombre, (x, y), xytext=(-5 if izquierda else 5, 4), textcoords='offset points',
                     ha='right' if izquierda else 'left', fontsize=tamano,
                     fontweight='bold' if negrita else 'normal', color=color, path_effects=HALO, zorder=11)
+
+
+# ------------------------------------------------------------------------------------------ diagramas geoquímicos
+# Lenguaje común de los diagramas: referencias publicadas rotuladas sobre el gráfico (en cursiva y con su cita),
+# campos interpretativos en gris claro, cada fuente como una región que encierra el 50 % de sus rocas y su mediana
+# como símbolo grande con la cruz Q1-Q3.
+TINTA = '#212529'              # marco, marcas y textos fuertes
+COLOR_REF = '#5c677d'          # líneas de referencia (no compite con los colores de las fuentes)
+COLOR_CAMPO = '#adb5bd'        # nombres de los campos interpretativos
+COLOR_BANDA = '#f4a261'        # bandas de referencia (ámbar suave)
+MARCADOR_FUENTE = {'Litogeoquímica': 'o', 'BDG 2022': 'D', 'GE27': 's', 'IPEN': '^', 'B-74': 'v'}
+
+# Composición de referencia (ppm): corteza continental superior (Rudnick y Gao, 2003)
+CCS = {'U': 2.7, 'Th': 10.5}
+
+
+def oscurecer(color, f=0.35):
+    """El mismo color, más oscuro (f = 0 no cambia; f = 1 es negro)."""
+    r, g, b = to_rgb(color)
+    return (r * (1 - f), g * (1 - f), b * (1 - f))
+
+
+def letra(ax, texto):
+    """Letra de panel en una pastilla oscura, a la izquierda del título."""
+    ax.text(-0.02, 1.02, texto, transform=ax.transAxes, ha='right', va='bottom', fontsize=11, fontweight='bold',
+            color='white', bbox=dict(boxstyle='round,pad=0.28', fc=TINTA, ec='none'), zorder=20)
+
+
+def marco(ax):
+    """Marco completo y nítido, marcas hacia dentro y rejilla muy suave."""
+    for lado in ('top', 'right', 'bottom', 'left'):
+        ax.spines[lado].set_visible(True)
+        ax.spines[lado].set_color(TINTA)
+        ax.spines[lado].set_linewidth(1.1)
+    ax.tick_params(which='both', direction='in', top=True, right=True, colors=TINTA, labelcolor='#343a40')
+    ax.tick_params(which='major', length=5, width=0.9)
+    ax.tick_params(which='minor', length=2.5, width=0.6)
+    ax.grid(True, which='major', color='#e9ecef', lw=0.6, zorder=0)
+    ax.set_axisbelow(True)
+
+
+def ejes_log_planos(ax, eje='both'):
+    """Números planos con coma decimal en ejes logarítmicos (0,1 - 1 - 10 - 100), como es costumbre en geoquímica."""
+    formato = FuncFormatter(lambda v, _: f'{v:g}'.replace('.', ','))
+    for nombre in (('x', 'y') if eje == 'both' else (eje,)):
+        eje_mpl = ax.xaxis if nombre == 'x' else ax.yaxis
+        eje_mpl.set_major_formatter(formato)
+        eje_mpl.set_minor_formatter(NullFormatter())
+
+
+def linea_ref(ax, y, texto='', pos=0.985, lado='arriba', ls=(0, (5, 3)), color=COLOR_REF, lw=1.1):
+    """Línea horizontal de referencia con su rótulo en cursiva sobre la propia línea."""
+    ax.axhline(y, color=color, ls=ls, lw=lw, zorder=1.5)
+    if texto:
+        ax.annotate(texto, xy=(pos, y), xycoords=('axes fraction', 'data'), ha='right' if pos > 0.5 else 'left',
+                    va='bottom' if lado == 'arriba' else 'top', fontsize=8, style='italic', color=color,
+                    xytext=(0, 2 if lado == 'arriba' else -2), textcoords='offset points', zorder=12,
+                    bbox=dict(boxstyle='round,pad=0.15', fc='white', ec='none', alpha=0.8))
+
+
+def banda_ref(ax, y0, y1, texto, pos=0.015):
+    """Banda horizontal de referencia (un rango publicado) con su rótulo dentro."""
+    ax.axhspan(y0, y1, color=COLOR_BANDA, alpha=0.16, lw=0, zorder=0.5)
+    y_medio = np.sqrt(y0 * y1) if ax.get_yscale() == 'log' else (y0 + y1) / 2
+    ax.annotate(texto, xy=(pos, y_medio), xycoords=('axes fraction', 'data'), ha='left' if pos < 0.5 else 'right',
+                va='center', fontsize=8, style='italic', color='#9c4a00', path_effects=HALO, zorder=6)
+
+
+def campo(ax, x, y, texto, ha='center', color=COLOR_CAMPO, tamano=9.5):
+    """Nombre de un campo interpretativo escrito sobre el gráfico (x, y en fracción de los ejes)."""
+    ax.text(x, y, texto, transform=ax.transAxes, ha=ha, va='center', fontsize=tamano, style='italic',
+            fontweight='bold', color=color, path_effects=HALO, zorder=1.2)
+
+
+def razon_constante(ax, r, texto, x_texto, ls='-', color=COLOR_REF, lw=0.9):
+    """Recta y = r·x en ejes log-log (Th/U constante) con el rótulo girado según su pendiente en pantalla.
+    Se llama después de fijar las escalas y los límites."""
+    x0, x1 = ax.get_xlim()
+    xs = np.logspace(np.log10(x0), np.log10(x1), 50)
+    ax.plot(xs, r * xs, color=color, ls=ls, lw=lw, zorder=1.5)
+    p1, p2 = ax.transData.transform([(x_texto, r * x_texto), (x_texto * 2, r * x_texto * 2)])
+    angulo = np.degrees(np.arctan2(p2[1] - p1[1], p2[0] - p1[0]))
+    ax.text(x_texto, r * x_texto, texto, rotation=angulo, rotation_mode='anchor', ha='left', va='bottom',
+            fontsize=8, style='italic', color=color, path_effects=HALO, zorder=6, transform_rotates_text=False)
+
+
+def punto_ref(ax, x, y, texto, dx=6, dy=4, tamano=230):
+    """Composición de referencia (p. ej., la corteza continental superior) como estrella con su nombre."""
+    ax.scatter([x], [y], marker='*', s=tamano, color='#ffd166', edgecolor='k', lw=0.9, zorder=8)
+    ax.annotate(texto, xy=(x, y), xytext=(dx, dy), textcoords='offset points', fontsize=8, fontweight='bold',
+                color='#343a40', path_effects=HALO, zorder=9)
+
+
+def densidad(ax, x, y, color, rango, logx=False, logy=False, nivel=0.5, n=180, alpha=0.28):
+    """Región que encierra el 50 % de las rocas de una fuente: la zona de mayor densidad de una estimación de núcleo
+    gaussiana, calculada en el espacio del eje (logarítmico si el eje lo es). `rango` = (x0, x1, y0, y1).
+    Con menos de 8 rocas no se dibuja, porque la estimación no sería estable."""
+    d = pd.DataFrame({'x': np.asarray(x, float), 'y': np.asarray(y, float)}).dropna()
+    if logx:
+        d = d[d.x > 0]
+    if logy:
+        d = d[d.y > 0]
+    if len(d) < 8:
+        return
+    tx = np.log10(d.x.values) if logx else d.x.values
+    ty = np.log10(d.y.values) if logy else d.y.values
+    nucleo = gaussian_kde(np.vstack([tx, ty]))
+    x0, x1, y0, y1 = rango
+    gx = np.linspace(np.log10(x0) if logx else x0, np.log10(x1) if logx else x1, n)
+    gy = np.linspace(np.log10(y0) if logy else y0, np.log10(y1) if logy else y1, n)
+    XX, YY = np.meshgrid(gx, gy)
+    Z = nucleo(np.vstack([XX.ravel(), YY.ravel()])).reshape(XX.shape)
+    umbral = np.quantile(nucleo(np.vstack([tx, ty])), 1 - nivel)      # densidad que deja dentro el 50 % de las rocas
+    PX = 10 ** XX if logx else XX
+    PY = 10 ** YY if logy else YY
+    ax.contourf(PX, PY, Z, levels=[umbral, Z.max() * 1.01], colors=[color], alpha=alpha, zorder=1.1)
+    ax.contour(PX, PY, Z, levels=[umbral], colors=[oscurecer(color, 0.12)], linewidths=1.6, zorder=1.3)
+
+
+def mediana(ax, x, y, color, marcador='o', tamano=11, desplazamiento=0):
+    """Mediana de una fuente: símbolo grande con borde negro y cruz Q1-Q3 (resumen robusto de la nube).
+
+    `desplazamiento` (en puntos) corre el símbolo en horizontal solo para que no tape a otra mediana casi igual; el
+    valor representado no cambia.
+    """
+    x, y = pd.Series(x).dropna(), pd.Series(y).dropna()
+    if len(x) < 3 or len(y) < 3:
+        return
+    antes = set(ax.lines) | set(ax.collections)
+    mx, my = x.median(), y.median()
+    error_x = [[mx - x.quantile(0.25)], [x.quantile(0.75) - mx]]
+    error_y = [[my - y.quantile(0.25)], [y.quantile(0.75) - my]]
+    ax.errorbar(mx, my, xerr=error_x, yerr=error_y, fmt='none', ecolor='white', elinewidth=4.2, capsize=0, zorder=8.5)
+    ax.errorbar(mx, my, xerr=error_x, yerr=error_y, fmt='none', ecolor=oscurecer(color, 0.15), elinewidth=2,
+                capsize=4, capthick=1.6, zorder=8.6)
+    ax.plot(mx, my, marker=marcador, ms=tamano, mfc=color, mec=TINTA, mew=1.4, ls='', zorder=9,
+            path_effects=[pe.withStroke(linewidth=3.5, foreground='white')])
+    if desplazamiento:
+        corrimiento = ScaledTranslation(desplazamiento / 72, 0, ax.figure.dpi_scale_trans)
+        for artista in [a for a in list(ax.lines) + list(ax.collections) if a not in antes]:
+            artista.set_transform(artista.get_transform() + corrimiento)
 
 
 # ------------------------------------------------------------------------------------------ guardado

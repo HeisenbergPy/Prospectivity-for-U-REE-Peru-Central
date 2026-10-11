@@ -7,5 +7,5 @@ Módulos:
     lectura      Lectura de las capas y conversión de la química (texto) a números
     espacial     Muestreo de rásteres, pares de muestras cercanas y cobertura en una grilla
     estadistica  Métricas de acuerdo entre fuentes y resúmenes por grupo
-    graficos     Estilo de las figuras, mapas en UTM, norte, escala y guardado
+    graficos     Estilo de las figuras, mapas en UTM, diagramas geoquímicos y guardado
 """
