@@ -107,7 +107,7 @@ funciones que emplean se encuentran en el paquete [`geocomp/`](geocomp/), y cada
 | `lectura.py` | Lectura de cada capa y conversión de la química (texto como `'<2.00'` o `'########'`) a números |
 | `espacial.py` | Muestreo de rásteres en puntos, pares de muestras cercanas, reproyección y cobertura en una grilla |
 | `estadistica.py` | Métricas de acuerdo entre fuentes (sesgo, RMS, correlación) y resúmenes por grupo |
-| `graficos.py` | Estilo de las figuras, mapas en UTM con norte y escala, números con coma decimal |
+| `graficos.py` | Estilo de las figuras, mapas en UTM con norte y escala, diagramas geoquímicos (regiones del 50 %, medianas Q1-Q3, razones Th/U) |
 
 # **5. Ejecución**
 
