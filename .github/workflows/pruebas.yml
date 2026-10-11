@@ -1,0 +1,25 @@
+# Comprueba en cada envío que el repositorio se puede clonar, instalar y ejecutar desde cero
+name: Pruebas
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Instalar uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Crear el entorno con las versiones exactas de uv.lock
+        run: uv sync --locked
+
+      - name: Pruebas de las funciones y de los datos
+        run: uv run pytest -v
+
+      - name: Ejecutar el cuaderno GC01 de principio a fin
+        run: uv run jupyter nbconvert --to notebook --execute cuadernos/GC01_avance_exploracion.ipynb --output /tmp/GC01_ejecutado.ipynb
