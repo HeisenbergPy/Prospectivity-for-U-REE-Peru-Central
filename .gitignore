@@ -1,0 +1,21 @@
+# Entorno (se reconstruye con: uv sync)
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Caché de estadísticas de ArcGIS y GDAL
+*.aux.xml
+
+# Archivos temporales de Office y del sistema
+~$*
+.DS_Store
+Thumbs.db
+
+# Configuración local de editores y herramientas
+.vscode/
+.idea/
+
+# Cuadernos ejecutados desde la terminal (nbconvert --output-dir salida)
+salida/

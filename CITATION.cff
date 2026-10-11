@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "Si usas este repositorio, cítalo con estos datos."
+title: 'Prospectivity for "U - REE" - Peru Central: validación de fuentes públicas de gravimetría y uranio en roca'
+type: software
+authors:
+  - family-names: "Gutiérrez Cruzado"
+    given-names: "Carlos Manuel"
+    affiliation: "Pontificia Universidad Católica del Perú"
+  - family-names: "Cordero Escobar"
+    given-names: "Félix Bryan"
+    affiliation: "Pontificia Universidad Católica del Perú"
+repository-code: "https://github.com/HeisenbergPy/Prospectivity-for-U-REE-Peru-Central"
+license: MIT
+version: "0.1.0"
+date-released: "2026-10-16"
+keywords:
+  - geocomputación
+  - uranio
+  - gravimetría
+  - INGEMMET
+  - Perú

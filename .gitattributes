@@ -1,0 +1,12 @@
+# Código y textos: fin de línea normalizado en el repositorio
+* text=auto
+
+# Datos: se guardan byte a byte (sin convertir fines de línea), para que coincidan con su huella sha256
+datos/** -text
+
+# Binarios
+*.png binary
+*.tif binary
+*.shp binary
+*.shx binary
+*.dbf binary

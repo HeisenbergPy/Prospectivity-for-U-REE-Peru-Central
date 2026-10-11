@@ -1,0 +1,44 @@
+[project]
+name = "geocomp-u-peru-central"
+version = "0.1.0"
+description = "Validación de fuentes de gravimetría y de uranio en roca en la Cordillera Oriental del Perú central"
+readme = "README.md"
+authors = [
+    { name = "Carlos Manuel Gutiérrez Cruzado" },
+    { name = "Félix Bryan Cordero Escobar" },
+]
+license = "MIT"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    # Tablas y cálculo
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "scipy>=1.13",
+    # Vectores (SHP) y rásteres (GeoTIFF)
+    "geopandas>=1.0",
+    "pyogrio>=0.9",
+    "shapely>=2.0",
+    "pyproj>=3.6",
+    "rasterio>=1.3",
+    # Figuras
+    "matplotlib>=3.8",
+    "matplotlib-scalebar>=0.9",
+    "cmcrameri>=1.9",
+    # Cuadernos
+    "ipykernel>=6.29",
+    "notebook>=7.2",
+    "nbconvert>=7.16",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["geocomp"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
