@@ -157,7 +157,13 @@ diferencia de laboratorio.
 - Valencia (2016). En *Informe Científico Tecnológico*, vol. 14 (p. 131). Instituto Peruano de Energía Nuclear.
 - Zingerle, P., Pail, R., Gruber, T., y Oikonomidou, X. (2020). [The combined global gravity field model XGM2019e](https://doi.org/10.1007/s00190-020-01398-0). *Journal of Geodesy, 94*, 66.
 
-# **8. Licencia y cita**
+# **8. Declaración de uso de inteligencia artificial**
+
+---
+Se utilizó una herramienta de inteligencia artificial generativa como apoyo en la edición estética de las gráficas:
+formato, paleta de colores, tipografía y composición de las figuras y de las imágenes de este README.
+
+# **9. Licencia y cita**
 
 ---
 El código se distribuye bajo la licencia MIT (ver [`LICENSE`](LICENSE)). Los datos conservan la licencia y la cita de
