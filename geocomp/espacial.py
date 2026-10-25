@@ -143,3 +143,15 @@ def raster_a_utm(ruta, aoi, celda=250, margen=5000, metodo='bilineal'):
         reproject(source=rasterio.band(src, 1), destination=destino, src_nodata=src.nodata, dst_nodata=np.nan,
                   dst_transform=from_origin(x0, y1, celda, celda), dst_crs=aoi.crs, resampling=remuestreo)
     return destino, (x0, x0 + ancho * celda, y1 - alto * celda, y1)
+
+
+def muestrear_matriz(matriz, extension, puntos):
+    """Valor de una matriz en memoria (p. ej., una anomalía residual calculada en el cuaderno) en cada punto UTM,
+    con interpolación bilineal. `extension` = (x_min, x_max, y_min, y_max), como la devuelve `raster_a_utm`."""
+    x0, x1, y0, y1 = extension
+    filas, columnas = matriz.shape
+    col = (puntos.geometry.x.values - x0) / (x1 - x0) * columnas - 0.5
+    fila = (y1 - puntos.geometry.y.values) / (y1 - y0) * filas - 0.5
+    fuera = (col < -0.5) | (fila < -0.5) | (col > columnas - 0.5) | (fila > filas - 0.5)
+    valores = map_coordinates(matriz, [fila, col], order=1, mode='nearest')
+    return np.where(fuera, np.nan, valores)

@@ -229,3 +229,18 @@ def correccion_terreno(puntos, alturas, ruta_dem, aoi, celda=250, radio=20_000, 
         dh = ventana[usar] - h
         correcciones.append(G * densidad * celda ** 2 * np.sum(1 / r[usar] - 1 / np.sqrt(r[usar] ** 2 + dh ** 2)))
     return np.array(correcciones) * MGAL
+
+
+# ------------------------------------------------------------------------------------------ separación regional
+def separar_regional(matriz, celda, sigma_m):
+    """Separa una grilla de anomalía de Bouguer en una parte regional y una residual.
+
+    La regional es la grilla suavizada con un filtro gaussiano de desviación `sigma_m` metros: retiene las longitudes
+    de onda largas (en los Andes, el engrosamiento de la corteza). La residual = grilla − regional conserva las
+    fuentes más someras y pequeñas, como un plutón. El resultado depende de `sigma_m`, por lo que conviene probar
+    varios valores. Devuelve (regional, residual).
+    """
+    from scipy.ndimage import gaussian_filter
+
+    regional = gaussian_filter(matriz, sigma_m / celda, mode='nearest')
+    return regional, matriz - regional

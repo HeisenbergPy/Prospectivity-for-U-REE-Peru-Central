@@ -105,3 +105,17 @@ def test_distancias_exigen_coordenadas_en_metros():
         pares_cercanos(a, a, distancia_max=100)
     with pytest.raises(ValueError):
         vecino_mas_cercano(a, a, columnas=[])
+
+
+def test_muestrear_matriz_bilineal():
+    """En una matriz que crece 1 por columna, el valor interpolado en x es la posición en celdas."""
+    import geopandas as gpd
+    from shapely.geometry import Point
+
+    from geocomp.espacial import muestrear_matriz
+    matriz = np.tile(np.arange(10.0), (5, 1))                       # 5 filas × 10 columnas, celdas de 100 m
+    extension = (0, 1000, 0, 500)
+    puntos = gpd.GeoDataFrame(geometry=[Point(50, 250), Point(500, 250), Point(2000, 250)], crs='EPSG:32718')
+    valores = muestrear_matriz(matriz, extension, puntos)
+    np.testing.assert_allclose(valores[:2], [0.0, 4.5])
+    assert np.isnan(valores[2])                                     # fuera de la matriz

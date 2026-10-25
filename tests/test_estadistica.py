@@ -65,3 +65,26 @@ def test_intervalo_de_la_razon_mediana():
     inferior, superior = intervalo_razon_mediana(a, 2 * a * rng.lognormal(0, 0.1, 200))
     assert inferior < 2 < superior
     assert np.isnan(intervalo_razon_mediana([1.0, 2.0], [2.0, 4.0])[0])     # con menos de 3 pares no se calcula
+
+
+def test_regresion_log_recupera_el_factor():
+    from geocomp.estadistica import regresion_log
+    x = np.linspace(45, 75, 40)
+    y = 2 * 10 ** (0.03 * (x - 45))                  # el valor se multiplica por 10^0,3 ≈ 2 cada 10 unidades
+    r = regresion_log(x, y)
+    assert r['pendiente'] == pytest.approx(0.03)
+    assert r['r2'] == pytest.approx(1)
+    assert r['pend_inf'] <= r['pendiente'] <= r['pend_sup']
+
+
+def test_correlacion_parcial_quita_la_variable_comun():
+    """x e y dependen las dos de z, pero no entre sí: la correlación simple es alta y la parcial, cercana a 0."""
+    from scipy import stats
+
+    from geocomp.estadistica import correlacion_parcial
+    rng = np.random.default_rng(5)
+    z = rng.normal(size=500)
+    x, y = z + rng.normal(0, 0.3, 500), z + rng.normal(0, 0.3, 500)
+    assert stats.spearmanr(x, y)[0] > 0.8
+    rho, p = correlacion_parcial(x, y, z)
+    assert abs(rho) < 0.15 and p > 0.01

@@ -104,3 +104,38 @@ def intervalo_razon_mediana(a, b, nivel=0.90, n_remuestreos=2000, semilla=0):
     medianas = np.median(rng.choice(razon, size=(n_remuestreos, len(razon)), replace=True), axis=1)
     cola = (1 - nivel) / 2
     return tuple(np.quantile(medianas, [cola, 1 - cola]))
+
+
+def regresion_log(x, y, log_x=False):
+    """Recta de mínimos cuadrados de log10(y) frente a x (o frente a log10(x) si `log_x`).
+
+    En geoquímica las concentraciones varían en órdenes de magnitud, así que la relación se ajusta en escala
+    logarítmica. Devuelve n, pendiente, su intervalo de confianza del 95 % (t de Student), intercepto y r². Con
+    `log_x=False`, 10^(pendiente·Δx) es el factor por el que se multiplica y cuando x aumenta Δx.
+    """
+    x, y = np.asarray(x, float), np.asarray(y, float)
+    ok = np.isfinite(x) & np.isfinite(y) & (y > 0) & ((x > 0) if log_x else True)
+    xx = np.log10(x[ok]) if log_x else x[ok]
+    ajuste = stats.linregress(xx, np.log10(y[ok]))
+    t = stats.t.ppf(0.975, ok.sum() - 2)
+    return {'n': int(ok.sum()), 'pendiente': ajuste.slope, 'pend_inf': ajuste.slope - t * ajuste.stderr,
+            'pend_sup': ajuste.slope + t * ajuste.stderr, 'intercepto': ajuste.intercept, 'r2': ajuste.rvalue ** 2}
+
+
+def correlacion_parcial(x, y, z):
+    """Correlación de Spearman entre x e y descontando el efecto de z (p. ej., la posición este-oeste).
+
+    Se pasan las tres variables a rangos, se quita a x y a y la parte que explica z con una recta y se correlacionan
+    los residuos. Si x e y solo se parecen porque ambas cambian con z, la correlación parcial se acerca a 0.
+    Devuelve (rho, p), con el valor p de una t de Student con n − 3 grados de libertad.
+    """
+    tabla = pd.DataFrame({'x': x, 'y': y, 'z': z}).dropna()
+    rangos = tabla.rank()
+
+    def residuo(v):
+        return rangos[v] - np.polyval(np.polyfit(rangos['z'], rangos[v], 1), rangos['z'])
+
+    rho = np.corrcoef(residuo('x'), residuo('y'))[0, 1]
+    n = len(tabla)
+    t = rho * np.sqrt((n - 3) / (1 - rho ** 2))
+    return rho, 2 * stats.t.sf(abs(t), n - 3)

@@ -111,3 +111,11 @@ def test_correccion_de_terreno_en_un_valle_suma(tmp_path):
     tc_profundo = gr.correccion_terreno(estacion, [1000.0], ruta, aoi, celda=250, radio=5000)
     assert tc[0] > 0
     assert tc_profundo[0] > tc[0]
+
+
+def test_separar_regional_conserva_la_suma():
+    rng = np.random.default_rng(2)
+    z = np.add.outer(np.zeros(40), np.linspace(-300, -150, 50)) + rng.normal(0, 5, (40, 50))
+    regional, residual = gr.separar_regional(z, celda=1000, sigma_m=10_000)
+    np.testing.assert_allclose(regional + residual, z)
+    assert abs(residual.mean()) < 1 and residual.std() < z.std()
