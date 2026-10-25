@@ -5,11 +5,12 @@
 | `paneles.py` | Genera en `imagenes/` los mapas sin ejes que usan los diseños (ubicación, relieve, anomalía de Bouguer, U en roca y curvas de nivel) |
 | `diseno/portada.html` | Portada del README |
 | `diseno/flujo.html` | Diagrama del flujo de trabajo del repositorio |
-| `diseno/resultados.html` | Resultados principales de GC01 |
+| `diseno/resultados.html` | Resultados principales de GC02 y GC03 |
 | `portada.png`, `flujo.png`, `resultados.png` | Exportación de las tres páginas anteriores (resolución 2x) |
 
 Los diseños son páginas HTML con CSS y usan las familias tipográficas IBM Plex (Google Fonts, licencia SIL Open Font
-License). Las cifras de `resultados.html` provienen del cuaderno `cuadernos/GC01_avance_exploracion.ipynb`.
+License). Las cifras de `resultados.html` provienen de los cuadernos `cuadernos/GC02_validacion_fuentes.ipynb` y
+`cuadernos/GC03_relacion_variables.ipynb`.
 
 ## Cómo regenerar las imágenes
 
