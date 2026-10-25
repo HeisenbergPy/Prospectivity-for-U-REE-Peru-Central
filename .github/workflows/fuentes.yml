@@ -19,8 +19,15 @@ jobs:
       - name: Crear el entorno con las versiones exactas de uv.lock
         run: uv sync --locked
 
-      - name: Descargar las fuentes y compararlas con datos/
-        run: uv run python scripts/descargar_datos.py
+      - name: Descargar el DEM y los coeficientes de ICGEM y compararlos con datos/
+        run: uv run python scripts/descargar_datos.py --fuentes dem icgem
 
       - name: Síntesis armónica de XGM2019e y comparación con datos/
         run: uv run python scripts/sintesis_xgm2019e.py
+
+      # El servidor de GEOCATMIN no envía su certificado intermedio: Windows lo completa por su cuenta, pero en
+      # Linux la conexión segura puede fallar. Este paso informa sin detener el flujo (la comparación con GEOCATMIN
+      # se verificó desde Windows; ver datos/LEEME.md).
+      - name: Descargar las capas de GEOCATMIN y compararlas con datos/
+        continue-on-error: true
+        run: uv run python scripts/descargar_datos.py --fuentes geocatmin
