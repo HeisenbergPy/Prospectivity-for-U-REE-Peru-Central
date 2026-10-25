@@ -21,5 +21,5 @@ jobs:
       - name: Pruebas de las funciones y de los datos
         run: uv run pytest -v
 
-      - name: Ejecutar el cuaderno GC01 de principio a fin
-        run: uv run jupyter nbconvert --to notebook --execute cuadernos/GC01_avance_exploracion.ipynb --output /tmp/GC01_ejecutado.ipynb
+      - name: Ejecutar los tres cuadernos de principio a fin
+        run: uv run jupyter nbconvert --to notebook --execute cuadernos/*.ipynb --output-dir /tmp/cuadernos

@@ -1,0 +1,26 @@
+# A pedido (pestaña Actions > Fuentes > Run workflow): vuelve a descargar las fuentes públicas, las compara con
+# datos/ y rehace la síntesis de XGM2019e. No se ejecuta en cada envío porque depende de servicios externos
+# (GEOCATMIN, AWS e ICGEM) y descarga 420 MB de coeficientes.
+name: Fuentes
+
+on:
+  workflow_dispatch:
+
+jobs:
+  fuentes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Instalar uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Crear el entorno con las versiones exactas de uv.lock
+        run: uv sync --locked
+
+      - name: Descargar las fuentes y compararlas con datos/
+        run: uv run python scripts/descargar_datos.py
+
+      - name: Síntesis armónica de XGM2019e y comparación con datos/
+        run: uv run python scripts/sintesis_xgm2019e.py

@@ -1,6 +1,6 @@
 [project]
 name = "geocomp-u-peru-central"
-version = "0.1.0"
+version = "1.0.0"
 description = "Validación de fuentes de gravimetría y de uranio en roca en la Cordillera Oriental del Perú central"
 readme = "README.md"
 authors = [

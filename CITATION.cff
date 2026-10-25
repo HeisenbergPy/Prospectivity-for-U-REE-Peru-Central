@@ -11,11 +11,13 @@ authors:
     affiliation: "Pontificia Universidad Católica del Perú"
 repository-code: "https://github.com/HeisenbergPy/Prospectivity-for-U-REE-Peru-Central"
 license: MIT
-version: "0.1.0"
-date-released: "2026-10-16"
+version: "1.0.0"
+date-released: "2026-10-25"
 keywords:
   - geocomputación
   - uranio
   - gravimetría
   - INGEMMET
   - Perú
+  - síntesis armónica
+  - XGM2019e
