@@ -46,3 +46,36 @@ def test_a_numero_conserva_el_indice():
 ])
 def test_anio_en_texto(texto, anio):
     np.testing.assert_equal(anio_en_texto(texto), anio)
+
+
+def test_unir_replicas():
+    """Dos análisis de la misma roca se unen (media geométrica del U); el mismo código en otro lugar no."""
+    import geopandas as gpd
+    from shapely.geometry import Point
+
+    from geocomp.lectura import unir_replicas
+
+    tabla = gpd.GeoDataFrame({
+        'fuente': ['A', 'A', 'A', 'B'], 'codigo': ['x', 'x', 'x', 'x'],
+        'U_ppm': [4.0, 9.0, 2.0, 5.0], 'Th_ppm': [10.0, 40.0, 8.0, 1.0], 'SiO2_pct': [66.0, 68.0, 50.0, 70.0],
+    }, geometry=[Point(0, 0), Point(0.3, 0), Point(30_000, 0), Point(0, 0)], crs='EPSG:32718')
+    r = unir_replicas(tabla)
+    assert len(r) == 3                                        # 2 réplicas unidas; otro lugar y otra fuente se quedan
+    unida = r[r.n_analisis == 2].iloc[0]
+    assert unida.U_ppm == pytest.approx(6.0)                  # √(4 · 9)
+    assert unida.Th_ppm == pytest.approx(20.0)
+    assert unida.SiO2_pct == pytest.approx(67.0)
+
+
+@pytest.mark.parametrize('texto, es_veta', [
+    ('Veta de cuarzo con trazas de galena y pirita.', True),
+    ('Vetillas de calcita con trazas de calcopirita', True),
+    ('Mineral de cancha, filitas con sericita', True),
+    ('Roca alterada probable andesita cortada por venillas de cuarzo', False),   # roca de caja con venillas
+    ('Granito rosado de grano grueso con biotita.', False),
+])
+def test_vetas_del_ge27(texto, es_veta):
+    import re
+
+    from geocomp.lectura import VETA_GE27
+    assert bool(re.match(VETA_GE27, texto)) == es_veta

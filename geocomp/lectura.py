@@ -23,6 +23,9 @@ BDG_DIGESTION_PARCIAL = ('GE33-B6', 'GE33B-5')
 # Una muestra con Cu, Pb o Zn por encima de este valor (ppm) es mena, no roca de caja
 UMBRAL_MENA_PPM = 1000
 
+# Descripciones del GE27 que corresponden a vetas o material mineralizado (no a la roca de caja)
+VETA_GE27 = r'^(?:Veta|Vetas|Vetillas|Mineral de cancha|Cuerpo mineralizado|Brecha hidrotermal|Panizo)'
+
 _NUMERO = re.compile(r'^-?\d+(?:[.,]\d+)?(?:[eE][+-]?\d+)?$')
 _MILES = re.compile(r'^-?\d{1,3}(?:,\d{3})+$')        # '1,000' o '10,000': ¿coma decimal o de miles?
 _ANIO = re.compile(r'(19[5-9]\d|20[0-2]\d)')
@@ -127,12 +130,17 @@ def _es_mena(capa, columnas):
 def cargar_uranio(crs=CRS_UTM):
     """Une las cinco fuentes de U en roca en una sola tabla con columnas comunes.
 
-    Columnas: fuente, codigo, U_ppm, estado_U, Th_ppm, SiO2_pct, anio, metodo, es_mena y geometry.
+    Columnas: fuente, codigo, U_ppm, estado_U, Th_ppm, SiO2_pct, anio, metodo, es_mena, es_veta, en_labor_minera
+    y geometry.
     Se conservan todas las filas (también las que no tienen U medido) para poder contar la cobertura de cada fuente.
     Se excluye lo que no es roca: los suelos del GE27 (uno llega a 10 000 ppm, con posible pechblenda) y el mineral
     de torbernita del IPEN. Del B-74 solo se toman las rocas que están dentro del área de estudio.
     `es_mena` marca las muestras con Cu, Pb o Zn > 1000 ppm en las fuentes que miden esos metales (litogeoquímica y
     BDG 2022); GE27, IPEN y B-74 no los miden, así que allí queda en False.
+    `es_veta` marca lo que la propia fuente describe como veta, vetilla, mena o material de cancha (litogeoquímica:
+    emplazamiento o tipo de roca; GE27: descripción geológica; B-74: forma del cuerpo muestreado).
+    `en_labor_minera` marca las muestras de BDG 2022 tomadas en una mina o prospecto (campo A_ITS): esa base
+    combina rocas y menas de la metalogenia, así que no es un muestreo regional como la litogeoquímica.
     Se eliminan los duplicados exactos: misma fuente, mismo código, mismo U y mismo lugar (a 1 m).
     """
     partes = []
@@ -142,7 +150,9 @@ def cargar_uranio(crs=CRS_UTM):
     partes.append(pd.DataFrame({
         'fuente': 'Litogeoquímica', 'codigo': c['CODIGO'].astype(str), 'U_txt': c['U'], 'Th_ppm': a_numero(c['TH']),
         'SiO2_pct': a_numero(c['SIO2']), 'anio': c['QUIMICA_RE'].map(anio_en_texto),
-        'metodo': 'fusión (mayoritaria)', 'es_mena': _es_mena(c, ['CU', 'PB', 'ZN']), 'geometry': c.geometry}))
+        'metodo': 'fusión (mayoritaria)', 'es_mena': _es_mena(c, ['CU', 'PB', 'ZN']),
+        'es_veta': c['EMPLAZAMIE'].str.lower().isin(['mena', 'veta']) | c['TIPO_ROCA'].str.lower().eq('mena'),
+        'en_labor_minera': False, 'geometry': c.geometry}))
 
     # BDG 2022: el U por fusión ("_ROCA") tiene prioridad sobre el multielemento por digestión
     c = cargar_capa('bdg_2022', crs)
@@ -156,7 +166,7 @@ def cargar_uranio(crs=CRS_UTM):
         'anio': pd.to_datetime(c['F_MTRA'], unit='ms', errors='coerce').dt.year.astype(float),
         'metodo': metodo, 'es_mena': _es_mena(c, ['CU_PPM', 'PB_PPM', 'ZN_PPM', 'ZN_PPM_ROC', 'CU_PPM_MEN',
                                                   'PB_PPM_MEN', 'ZN_PPM_MEN']),
-        'geometry': c.geometry}))
+        'es_veta': False, 'en_labor_minera': c['A_ITS'].ne('No aplica'), 'geometry': c.geometry}))
 
     # GE27: proyecto de materias primas críticas de INGEMMET (solo U); se excluyen los suelos
     c = cargar_capa('ge27', crs)
@@ -164,7 +174,8 @@ def cargar_uranio(crs=CRS_UTM):
     partes.append(pd.DataFrame({
         'fuente': 'GE27', 'codigo': c['C_DIGO'].astype(str), 'U_txt': c['U_PPM'], 'Th_ppm': np.nan,
         'SiO2_pct': np.nan, 'anio': c['A_O'].astype(float), 'metodo': 'fusión (peróxido de sodio)',
-        'es_mena': False, 'geometry': c.geometry}))
+        'es_mena': False, 'es_veta': c['GEOLOG_A'].str.match(VETA_GE27), 'en_labor_minera': False,
+        'geometry': c.geometry}))
 
     # IPEN: rocas de San Ramón (se excluye la torbernita, que es un mineral de U)
     c = cargar_capa('ipen', crs)
@@ -172,14 +183,16 @@ def cargar_uranio(crs=CRS_UTM):
     partes.append(pd.DataFrame({
         'fuente': 'IPEN', 'codigo': c['CODIGO'].astype(str), 'U_txt': c['U_PPM'], 'Th_ppm': a_numero(c['TH_PPM']),
         'SiO2_pct': np.nan, 'anio': c['FUENTE'].map(anio_en_texto), 'metodo': c['METODO'],
-        'es_mena': False, 'geometry': c.geometry}))
+        'es_mena': False, 'es_veta': False, 'en_labor_minera': False, 'geometry': c.geometry}))
 
     # Boletín B-74 (Carpio et al., 2021): solo las rocas dentro del área de estudio
     c = cargar_capa('b74', crs)
     c = c[c['EN_AOI'].eq('SI')]
     partes.append(pd.DataFrame({
         'fuente': 'B-74', 'codigo': c['CODIGO'].astype(str), 'U_txt': c['U_PPM'], 'Th_ppm': a_numero(c['TH_PPM']),
-        'SiO2_pct': np.nan, 'anio': 2021.0, 'metodo': 'digestión sin HF', 'es_mena': False, 'geometry': c.geometry}))
+        'SiO2_pct': np.nan, 'anio': 2021.0, 'metodo': 'digestión sin HF', 'es_mena': False,
+        'es_veta': c['FORMA'].str.lower().str.startswith(('veta', 'vetilla')), 'en_labor_minera': False,
+        'geometry': c.geometry}))
 
     tabla = pd.concat(partes, ignore_index=True)
 
@@ -191,6 +204,39 @@ def cargar_uranio(crs=CRS_UTM):
 
     tabla['U_ppm'] = a_numero(tabla['U_txt'])
     tabla['estado_U'] = estado(tabla['U_txt'])
+    tabla[['es_veta', 'en_labor_minera']] = tabla[['es_veta', 'en_labor_minera']].fillna(False).astype(bool)
     columnas = ['fuente', 'codigo', 'U_ppm', 'estado_U', 'Th_ppm', 'SiO2_pct', 'anio', 'metodo', 'es_mena',
-                'geometry']
+                'es_veta', 'en_labor_minera', 'geometry']
     return gpd.GeoDataFrame(tabla[columnas], geometry='geometry', crs=crs)
+
+
+def unir_replicas(tabla, distancia_m=1.0):
+    """Une los análisis repetidos de una misma muestra: misma fuente, mismo código y mismo lugar (a 1 m).
+
+    No son duplicados exactos (el U o el SiO2 cambian un poco): son dos análisis de la misma roca. Si se dejaran
+    ambos, esa roca pesaría el doble. Se reemplazan por una sola fila con la media geométrica del U y del Th (el
+    error analítico es proporcional al valor) y la media aritmética del SiO2; `n_analisis` dice cuántos se unieron.
+    Dos muestras con el mismo código pero en lugares distintos son rocas distintas mal codificadas y se conservan.
+    """
+    puntos = gpd.GeoSeries(tabla.geometry)
+    clave = pd.DataFrame({'fuente': tabla['fuente'], 'codigo': tabla['codigo'],
+                          'x': (puntos.x / distancia_m).round(), 'y': (puntos.y / distancia_m).round()})
+    grupo = clave.groupby(list(clave.columns), sort=False).ngroup()
+
+    def media_geometrica(v):
+        v = v[v > 0]
+        return np.exp(np.log(v).mean()) if len(v) else np.nan
+
+    resumen = tabla.groupby(grupo, sort=False).agg(
+        {**{c: 'first' for c in tabla.columns if c not in ('U_ppm', 'Th_ppm', 'SiO2_pct')},
+         'U_ppm': media_geometrica, 'Th_ppm': media_geometrica, 'SiO2_pct': 'mean'})
+    resumen['n_analisis'] = tabla.groupby(grupo, sort=False).size().values
+    return gpd.GeoDataFrame(resumen[list(tabla.columns) + ['n_analisis']].reset_index(drop=True),
+                            geometry='geometry', crs=tabla.crs)
+
+
+def rocas_de_caja(tabla):
+    """Rocas para comparar fuentes y relacionar variables: con U medido, sin vetas ni menas y con las réplicas
+    unidas. Es la depuración común de GC02 y GC03."""
+    rocas = tabla[tabla['U_ppm'].notna() & ~tabla['es_mena'] & ~tabla['es_veta']]
+    return unir_replicas(rocas)
