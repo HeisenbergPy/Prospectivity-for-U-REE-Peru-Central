@@ -67,3 +67,40 @@ def mediana_por_tramo(tabla, x, y, tramos, minimo=3):
     resumen = resumen[resumen.n >= minimo].copy()
     resumen['x'] = [tramo.mid for tramo in resumen.index]
     return resumen
+
+
+def bland_altman(referencia, estimado, log=False):
+    """Diagrama de Bland y Altman (1986): diferencia entre dos fuentes frente a su promedio.
+
+    Muestra si el desacuerdo depende del nivel de la variable. Devuelve un diccionario con `media` y `diferencia`
+    (arreglos para graficar), el `sesgo` (media de la diferencia) y los límites de acuerdo al 95 % (`lim_inf`,
+    `lim_sup` = sesgo ± 1,96 desviaciones). Con `log=True` (variables positivas como el U) la diferencia es
+    log10(estimado/referencia) y la media es la media geométrica: el error se lee como un factor.
+    """
+    x, y = np.asarray(referencia, float), np.asarray(estimado, float)
+    ok = np.isfinite(x) & np.isfinite(y) & ((x > 0) & (y > 0) if log else True)
+    x, y = x[ok], y[ok]
+    if log:
+        media, diferencia = np.sqrt(x * y), np.log10(y / x)
+    else:
+        media, diferencia = (x + y) / 2, y - x
+    sesgo, desv = diferencia.mean(), diferencia.std(ddof=1)
+    return {'media': media, 'diferencia': diferencia, 'n': int(ok.sum()), 'sesgo': sesgo,
+            'lim_inf': sesgo - 1.96 * desv, 'lim_sup': sesgo + 1.96 * desv}
+
+
+def intervalo_razon_mediana(a, b, nivel=0.90, n_remuestreos=2000, semilla=0):
+    """Intervalo de confianza de la razón mediana b/a por remuestreo de los pares (bootstrap de percentiles).
+
+    Con pocos pares la mediana es inestable; el intervalo dice qué tan lejos de 1 está con esa incertidumbre.
+    `semilla` fija el remuestreo para que el resultado sea reproducible.
+    """
+    a, b = np.asarray(a, float), np.asarray(b, float)
+    ok = np.isfinite(a) & np.isfinite(b) & (a > 0) & (b > 0)
+    razon = b[ok] / a[ok]
+    if len(razon) < 3:
+        return np.nan, np.nan
+    rng = np.random.default_rng(semilla)
+    medianas = np.median(rng.choice(razon, size=(n_remuestreos, len(razon)), replace=True), axis=1)
+    cola = (1 - nivel) / 2
+    return tuple(np.quantile(medianas, [cola, 1 - cola]))

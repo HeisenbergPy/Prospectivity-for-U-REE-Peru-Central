@@ -45,3 +45,23 @@ def test_mediana_por_tramo():
     assert list(r['med']) == [2.0, 5.0]               # el tramo 55-75 tiene una sola roca y se descarta
     assert list(r['x']) == [47.5, 52.5]
     assert list(r['n']) == [3, 3]
+
+
+def test_bland_altman_lineal_y_logaritmico():
+    from geocomp.estadistica import bland_altman
+    a = np.array([1.0, 2.0, 4.0, 8.0])
+    lineal = bland_altman(a, a + 1)
+    assert lineal['sesgo'] == pytest.approx(1)
+    assert lineal['lim_inf'] == pytest.approx(1) and lineal['lim_sup'] == pytest.approx(1)
+    log = bland_altman(a, 10 * a, log=True)                 # la segunda fuente mide siempre 10 veces más
+    assert log['sesgo'] == pytest.approx(1)                 # log10(10) = 1
+    np.testing.assert_allclose(log['media'], np.sqrt(10) * a)
+
+
+def test_intervalo_de_la_razon_mediana():
+    from geocomp.estadistica import intervalo_razon_mediana
+    rng = np.random.default_rng(3)
+    a = rng.lognormal(1, 0.5, 200)
+    inferior, superior = intervalo_razon_mediana(a, 2 * a * rng.lognormal(0, 0.1, 200))
+    assert inferior < 2 < superior
+    assert np.isnan(intervalo_razon_mediana([1.0, 2.0], [2.0, 4.0])[0])     # con menos de 3 pares no se calcula
