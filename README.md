@@ -15,32 +15,30 @@
 # **1. Introducción**
 
 ---
-El Perú no dispone de radiometría aérea pública, la herramienta habitual en la exploración de uranio. La información
-disponible proviene de varias instituciones (INGEMMET, el Instituto Peruano de Energía Nuclear y modelos globales),
-que muestrearon en épocas distintas y con laboratorios y métodos distintos. Este trabajo evalúa si esas fuentes
-**concuerdan** antes de integrarlas: compara **una misma variable obtenida de fuentes distintas** y analiza
-estadísticamente la **relación entre variables**.
+En el Perú no hay radiometría aérea pública, que es la herramienta usual para explorar uranio. Lo que existe son
+datos de INGEMMET, del Instituto Peruano de Energía Nuclear (IPEN) y de modelos globales, tomados en distintos años y
+analizados con métodos distintos. Antes de usarlos juntos en un estudio de prospectividad, en este trabajo
+comparamos una misma variable obtenida de varias fuentes y analizamos cómo se relaciona el uranio con otras
+variables.
 
-Preguntas del trabajo:
+Preguntas:
 
-1. ¿El modelo global de gravedad XGM2019e reproduce la anomalía de Bouguer medida en las estaciones de INGEMMET?
+1. ¿El modelo global de gravedad XGM2019e reproduce la anomalía de Bouguer de las estaciones de INGEMMET?
 2. ¿El uranio en roca medido por distintas instituciones es comparable?
 3. ¿Con qué variables se relaciona el uranio (Th, SiO₂, Be en sedimentos y gravedad)?
 
 **Área de estudio:** rectángulo de 110 × 140 km (15 400 km²) en la Cordillera Oriental de Junín y Pasco, en
-WGS 84 / UTM 18S (EPSG:32718). **Periodo:** los datos se adquirieron entre 1991 y 2024 según la fuente.
+WGS 84 / UTM 18S (EPSG:32718).<br>
+**Periodo:** los datos son de 1991 a 2024, según la fuente.
 
 # **2. Datos**
 
 ---
-Los datos crudos del área de estudio se incluyen en la carpeta [`datos/`](datos/) (18 MB), de modo que el
-repositorio puede ejecutarse inmediatamente después de clonarlo. La carpeta de
-[Google Drive](https://drive.google.com/drive/folders/17-0XKJ0bYfI-5cKTVCm1R5XPFr9zsT3t?usp=drive_link) contiene una
-copia idéntica.
-
-El archivo [`datos/manifiesto.csv`](datos/manifiesto.csv) registra la fuente, la forma de acceso y la huella sha256
-de cada archivo, lo que permite verificar que los datos no fueron modificados. Los campos, las licencias y el
-procedimiento de obtención se describen en [`datos/LEEME.md`](datos/LEEME.md).
+Los datos del área de estudio están en [`datos/`](datos/) (18 MB), así que el repositorio funciona apenas se
+clona. La misma carpeta está en
+[Google Drive](https://drive.google.com/drive/folders/17-0XKJ0bYfI-5cKTVCm1R5XPFr9zsT3t?usp=drive_link).
+En [`datos/manifiesto.csv`](datos/manifiesto.csv) está la fuente, la forma de acceso y la huella sha256 de cada
+archivo, y en [`datos/LEEME.md`](datos/LEEME.md) los campos, las licencias y cómo se obtuvo cada fuente.
 
 | Variable | Fuente | Formato | Acceso | En el área |
 |---|---|---|---|---:|
@@ -54,128 +52,115 @@ procedimiento de obtención se describen en [`datos/LEEME.md`](datos/LEEME.md).
 | Be, La, Y en sedimentos | Sedimentos de quebrada de INGEMMET | Shapefile | GEOCATMIN | 720 muestras |
 | Elevación | Copernicus DEM GLO-90 | GeoTIFF | Descarga libre (AWS) | 100 % |
 
-La grilla de XGM2019e no se descargó hecha: se calculó con una síntesis armónica propia a partir de los coeficientes
-oficiales del modelo ([`scripts/sintesis_xgm2019e.py`](scripts/sintesis_xgm2019e.py)), que reproduce la grilla de
-ICGEM con una diferencia máxima de 0,00002 mGal. El mismo script deja en `datos/gravedad/` el modelo evaluado en cada
-estación y una segunda grilla evaluada en la superficie, que usan GC02 y GC03.
+La grilla de XGM2019e la calculamos nosotros a partir de los coeficientes del modelo, porque las descargas de ICGEM
+fallaban. El script [`scripts/sintesis_xgm2019e.py`](scripts/sintesis_xgm2019e.py) la vuelve a calcular (la diferencia
+con la de ICGEM es menor que 0,0001 mGal) y genera además el modelo en cada estación y una grilla en la superficie,
+que se usan en GC02 y GC03.
 
 # **3. Instalación**
 
 ---
-Se requiere `git` y [uv](https://docs.astral.sh/uv/), el gestor de entornos de Python. uv instala Python 3.12 y las
-versiones exactas de las librerías registradas en `uv.lock`, de modo que el entorno es idéntico en cualquier equipo.
-
-Clonar el repositorio:
+Se necesita `git` y [uv](https://docs.astral.sh/uv/). uv instala Python 3.12 y las mismas versiones de librerías
+que están en `uv.lock`.
 
 ```bash
 git clone https://github.com/HeisenbergPy/Prospectivity-for-U-REE-Peru-Central.git
 cd Prospectivity-for-U-REE-Peru-Central
-```
-
-Crear el entorno:
-
-```bash
 uv sync
 ```
 
-Ejecutar las pruebas de las funciones y de los datos:
+Para correr las pruebas:
 
 ```bash
 uv run pytest
 ```
 
-**Sin uv:** en un entorno de Python 3.12, el paquete se instala con:
+Sin uv, en un entorno de Python 3.12: `pip install -e . pytest`.
 
-```bash
-pip install -e . pytest
-```
-
-# **4. Estructura y flujo de trabajo**
+# **4. Estructura**
 
 ---
 ![Flujo de trabajo del repositorio](recursos/flujo.png)
 
-El análisis se organiza en cuadernos de Jupyter, uno por etapa, en la carpeta [`cuadernos/`](cuadernos/). Las
-funciones que emplean se encuentran en el paquete [`geocomp/`](geocomp/), y cada una cuenta con pruebas en
-[`tests/`](tests/) (85 pruebas). Los dos scripts de [`scripts/`](scripts/) documentan cómo se obtuvieron los datos.
+```
+datos/        datos del área y manifiesto con las huellas sha256
+geocomp/      funciones que usan los cuadernos
+cuadernos/    GC01, GC02 y GC03
+scripts/      descarga de las fuentes y síntesis de XGM2019e
+tests/        pruebas de las funciones y de los datos
+figuras/      figuras que generan los cuadernos (PNG y SVG)
+recursos/     imágenes de este README
+```
 
-| Cuaderno | Contenido | Entrega | Estado |
-|---|---|---|:---:|
-| [GC01 - Acceso a los datos y exploración](cuadernos/GC01_avance_exploracion.ipynb) | Integridad de los datos, fuentes y forma de acceso, primera comparación de fuentes, cobertura y periodo | Parcial (16/10/2026) | ✔️ |
-| [GC02 - Validación de las fuentes](cuadernos/GC02_validacion_fuentes.ipynb) | Reducción de las estaciones, modelo evaluado en la superficie, corrección de terreno, Bland-Altman; U por pares, distancia, método analítico y tipo de roca | Final (22/11/2026) | ✔️ |
-| [GC03 - Relación del uranio con otras variables](cuadernos/GC03_relacion_variables.ipynb) | U frente a Th, SiO₂, Be del sedimento cercano y gravedad (total y residual), con correlación parcial y matriz de correlaciones | Final (22/11/2026) | ✔️ |
+| Cuaderno | Contenido | Entrega |
+|---|---|---|
+| [GC01 - Acceso a los datos y exploración](cuadernos/GC01_avance_exploracion.ipynb) | Integridad de los datos, fuentes, primera comparación, cobertura y periodo | Parcial (16/10/2026) |
+| [GC02 - Validación de las fuentes](cuadernos/GC02_validacion_fuentes.ipynb) | Gravedad: reducción de las estaciones, modelo en la superficie, corrección de terreno. Uranio: pares de muestras, método analítico y tipo de roca | Final (22/11/2026) |
+| [GC03 - Relación del uranio con otras variables](cuadernos/GC03_relacion_variables.ipynb) | U frente a Th, SiO₂, Be en sedimentos y gravedad | Final (22/11/2026) |
 
-| Módulo de `geocomp/` | Función |
+| Módulo | Qué hace |
 |---|---|
-| `rutas.py` | Rutas de los archivos y sistemas de coordenadas |
-| `acceso.py` | Consulta y descarga desde GEOCATMIN, ICGEM y AWS; verificación de los archivos con su huella sha256 |
-| `lectura.py` | Lectura de cada capa, conversión de la química (texto como `'<2.00'` o `'########'`) a números y depuración (menas, vetas y réplicas) |
-| `espacial.py` | Muestreo de rásteres y matrices en puntos, pares de muestras cercanas, reproyección y cobertura en una grilla |
-| `gravedad.py` | Síntesis armónica de modelos globales (grado 2190), reducción de Bouguer, corrección de terreno y separación regional-residual |
-| `estadistica.py` | Acuerdo entre fuentes (sesgo, RMS, Bland-Altman, bootstrap), regresión logarítmica y correlación parcial |
-| `graficos.py` | Estilo de las figuras, mapas en UTM con norte y escala, diagramas geoquímicos (regiones del 50 %, medianas Q1-Q3, razones Th/U) |
-
-| Script de `scripts/` | Función |
-|---|---|
-| `descargar_datos.py` | Vuelve a descargar las cinco capas de GEOCATMIN, el DEM y los coeficientes de ICGEM en `descargas/` y los compara con `datos/` (no lo modifica) |
-| `sintesis_xgm2019e.py` | Calcula la grilla de XGM2019e, la compara con la de `datos/` y obtiene el modelo en la superficie y en cada estación |
+| `geocomp/rutas.py` | Rutas de los archivos y sistemas de coordenadas |
+| `geocomp/acceso.py` | Descargas de GEOCATMIN, ICGEM y AWS, y verificación de las huellas sha256 |
+| `geocomp/lectura.py` | Lectura de las capas, química de texto a número (`'<2.00'`, `'########'`) y depuración de menas, vetas y réplicas |
+| `geocomp/espacial.py` | Valores de rásteres en puntos, pares de muestras cercanas, reproyección y cobertura |
+| `geocomp/gravedad.py` | Síntesis armónica, anomalía de Bouguer, corrección de terreno y separación regional-residual |
+| `geocomp/estadistica.py` | Sesgo, RMS, Bland-Altman, bootstrap, regresión logarítmica y correlación parcial |
+| `geocomp/graficos.py` | Estilo de las figuras, mapas y diagramas geoquímicos |
 
 # **5. Ejecución**
 
 ---
-Abrir Jupyter en el entorno del proyecto:
+Abrir los cuadernos:
 
 ```bash
 uv run jupyter notebook
 ```
 
-Ejecutar los tres cuadernos desde la terminal sin modificar los originales (el resultado se guarda en `salida/`):
+Ejecutar los tres cuadernos desde la terminal (los resultados quedan en `salida/` y los originales no cambian):
 
 ```bash
 uv run jupyter nbconvert --to notebook --execute cuadernos/*.ipynb --output-dir salida
 ```
 
-Comprobar la copia de los datos con sus fuentes y rehacer la síntesis del modelo de gravedad (requieren internet;
-la síntesis descarga 420 MB de coeficientes y tarda unos dos minutos):
+Volver a descargar las fuentes y compararlas con `datos/`, y rehacer la síntesis de XGM2019e (necesitan internet; la
+síntesis descarga 420 MB de coeficientes):
 
 ```bash
 uv run python scripts/descargar_datos.py
 uv run python scripts/sintesis_xgm2019e.py
 ```
 
-En cada cambio, GitHub Actions clona el repositorio desde cero, crea el entorno, ejecuta las pruebas y los tres
-cuadernos completos ([`.github/workflows/pruebas.yml`](.github/workflows/pruebas.yml)). La descarga y la síntesis se
-pueden ejecutar en GitHub a pedido ([`.github/workflows/fuentes.yml`](.github/workflows/fuentes.yml)). Las imágenes de
-este README se generan como se indica en [`recursos/LEEME.md`](recursos/LEEME.md).
+Con cada cambio, GitHub Actions instala el entorno desde cero, corre las pruebas y ejecuta los tres cuadernos
+([`pruebas.yml`](.github/workflows/pruebas.yml)). La descarga y la síntesis se pueden correr a mano desde la pestaña
+Actions ([`fuentes.yml`](.github/workflows/fuentes.yml)).
 
 # **6. Resultados**
 
 ---
 ![Resultados principales de GC02 y GC03](recursos/resultados.png)
 
-**1. Gravedad: ¿XGM2019e reproduce las estaciones?** Solo si se evalúa donde se midió. Las estaciones de INGEMMET son
-anomalías de Bouguer simples (ρ = 2670 kg/m³, sin corrección de terreno), lo que se comprobó recalculándolas con su
-gravedad observada. Evaluado sobre el elipsoide, como la grilla de GC01, el modelo difiere de las estaciones con una
-dispersión de 44 mGal, que llega a 66 mGal por encima de 3000 m; evaluado en la superficie, la dispersión baja a
-26 mGal (9 mGal en las estaciones altas) y los dos grupos de signo opuesto de GC01 desaparecen. Queda un sesgo que
-disminuye con la elevación (+30 mGal en los valles a −20 mGal en la puna): el modelo describe el patrón regional,
-pero no sustituye a las mediciones en un estudio local.
+**Gravedad.** Las estaciones de INGEMMET tienen anomalía de Bouguer simple (ρ = 2670 kg/m³, sin corrección de
+terreno); lo comprobamos recalculándolas con su gravedad observada. En GC01 comparamos con la grilla calculada sobre
+el elipsoide y la diferencia tenía una desviación de 44 mGal. Calculando el modelo a la altura de cada estación baja
+a 26 mGal, y en las estaciones de más de 3000 m pasa de 66 a 9 mGal. Los dos grupos de signo opuesto que vimos en
+GC01 se debían a esto. Todavía queda un sesgo que cambia con la elevación (unos +30 mGal en los valles y −20 mGal en
+la puna), por eso el modelo sirve para el patrón regional pero no reemplaza a las estaciones.
 
-![Diferencia entre el modelo y las estaciones con el modelo sobre el elipsoide y en la superficie](figuras/GC02_03_mapas_diferencia.png)
+![Diferencia entre el modelo y las estaciones](figuras/GC02_03_mapas_diferencia.png)
 
-**2. Uranio: ¿las fuentes son comparables?** Sí en las rocas graníticas. En pares a menos de 1 km, BDG 2022 mide
-unas 1,3 veces el U de la litogeoquímica, diferencia apenas significativa que se concentra en rocas básicas tomadas
-en labores mineras; en las rocas muy ácidas ambas coinciden, y GE27 coincide con la litogeoquímica. La digestión
-parcial subestima el U. La variabilidad entre muestras cercanas (factores de 0,2 a 11) supera cualquier sesgo entre
-fuentes: el principal problema al integrarlas es la representatividad, no el laboratorio.
+**Uranio.** En pares de muestras a menos de 1 km, BDG 2022 da una mediana de 1,3 veces el U de la litogeoquímica
+(p = 0,03). La diferencia está sobre todo en rocas básicas muestreadas en minas; en las rocas muy ácidas las dos
+fuentes dan lo mismo, y GE27 coincide con la litogeoquímica. La digestión parcial de BDG da menos U. Entre muestras
+cercanas el U puede variar de 0,2 a 11 veces, mucho más que la diferencia entre fuentes.
 
 ![U de BDG 2022 por método analítico y por clase de SiO2](figuras/GC02_07_metodo_y_litologia.png)
 
-**3. ¿Con qué se relaciona el U?** Con el Th de la misma roca (ρ = 0,80, con Th/U constante salvo en las rocas con U
-añadido), con el SiO₂ (el U se multiplica por 1,9 cada 10 % en la litogeoquímica) y con el Be del sedimento de
-quebrada más cercano (ρ = 0,41, estable con la distancia, en celdas y al descontar la elevación). Con la gravedad, la
-correlación simple (ρ = −0,12) desaparece al descontar la posición este-oeste (ρ parcial = −0,03), y la anomalía
-residual no da un resultado estable: a esta escala, la gravedad del modelo global no informa sobre el U.
+**Relación con otras variables.** El U se relaciona con el Th de la misma roca (ρ = 0,80), con el SiO₂ (en la
+litogeoquímica el U se multiplica por 1,9 por cada 10 % de SiO₂) y con el Be del sedimento de quebrada más cercano
+(ρ = 0,41, también al controlar la elevación). Con la gravedad la correlación es de −0,12, pero desaparece cuando se
+controla la posición este-oeste (−0,03), porque las dos variables cambian de oeste a este. La anomalía residual
+tampoco da un resultado estable.
 
 ![U de la roca y Be del sedimento cercano](figuras/GC03_03_uranio_berilio.png)
 
@@ -206,6 +191,6 @@ formato, paleta de colores, tipografía y composición de las figuras y de las i
 # **9. Licencia y cita**
 
 ---
-El código se distribuye bajo la licencia MIT (ver [`LICENSE`](LICENSE)). Los datos conservan la licencia y la cita de
-su fuente original (ver [`datos/LEEME.md`](datos/LEEME.md)). Para citar este trabajo puede usarse la opción
-*Cite this repository* de GitHub o el archivo [`CITATION.cff`](CITATION.cff).
+El código tiene licencia MIT ([`LICENSE`](LICENSE)). Los datos mantienen la licencia y la cita de su fuente
+([`datos/LEEME.md`](datos/LEEME.md)). Para citar el trabajo se puede usar *Cite this repository* en GitHub o
+[`CITATION.cff`](CITATION.cff).
