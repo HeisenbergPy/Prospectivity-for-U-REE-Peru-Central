@@ -13,6 +13,7 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 import geopandas as gpd
+import numpy as np
 import pandas as pd
 
 from .rutas import CRS_GEO, MANIFIESTO, RAIZ
@@ -24,7 +25,20 @@ CAPAS_GEOCATMIN = {
     'gravedad_estaciones': 'SERV_GEOFISICA/MapServer/4',
     'sedimentos': 'SERV_GEOQUIMICA/MapServer/1',
     'bdg_2022': 'SERV_GEOQUIMICA_2022/MapServer/10',
+    'litogeoquimica': 'SERV_GEOLOGIA_REGIONAL/MapServer/2',
+    'ge27': 'SERV_MATERIA_PRIMA_CRITICA/MapServer/31',
 }
+
+# Coeficientes de los modelos de ICGEM (GFZ Potsdam) para la síntesis de XGM2019e
+ICGEM = 'https://icgem.gfz.de/getmodel/gfc/'
+MODELOS_ICGEM = {
+    'XGM2019e_2159.gfc': ICGEM + 'eeb03971cf6e533e6eeb6b010336463286dcda0846684248d5530acf8e800055/XGM2019e_2159.gfc',
+    'etopo1-2250.gfc': ICGEM + '6ff9023d4e5d3b5665093b89313853df51175e9b5a5b078c407d02e846703936/etopo1-2250.gfc',
+}
+
+# Teselas de 1° × 1° del Copernicus DEM GLO-90 (formato COG en AWS, sin registro)
+DEM_COPERNICUS = ('https://copernicus-dem-90m.s3.amazonaws.com/Copernicus_DSM_COG_30_{t}_DEM/'
+                  'Copernicus_DSM_COG_30_{t}_DEM.tif')
 
 
 # ------------------------------------------------------------------------------------------ GEOCATMIN
@@ -65,6 +79,33 @@ def descargar_capa(servicio_capa, caja, bloque=500):
     if len(capa) != len(ids):
         raise RuntimeError(f'{servicio_capa}: descarga incompleta ({len(capa)} de {len(ids)} entidades)')
     return capa
+
+
+# ------------------------------------------------------------------------------------------ archivos en línea
+def descargar_archivo(url, destino, tiempo_max=600):
+    """Descarga un archivo grande por bloques (no lo carga entero en memoria). Si ya existe, no lo vuelve a bajar."""
+    destino = Path(destino)
+    if destino.exists():
+        return destino
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    temporal = destino.with_suffix(destino.suffix + '.parcial')
+    with urlopen(Request(url, headers={'User-Agent': 'Mozilla/5.0'}), timeout=tiempo_max) as respuesta, \
+            temporal.open('wb') as f:
+        for bloque in iter(lambda: respuesta.read(1 << 20), b''):
+            f.write(bloque)
+    temporal.replace(destino)              # solo queda con su nombre final si la descarga terminó
+    return destino
+
+
+def teselas_dem(caja):
+    """URL de las teselas del Copernicus DEM GLO-90 que cubren la caja (lon_min, lat_min, lon_max, lat_max)."""
+    lon0, lat0, lon1, lat1 = caja
+    urls = []
+    for lat in range(int(np.floor(lat0)), int(np.ceil(lat1))):
+        for lon in range(int(np.floor(lon0)), int(np.ceil(lon1))):
+            t = f"{'S' if lat < 0 else 'N'}{abs(lat):02d}_00_{'W' if lon < 0 else 'E'}{abs(lon):03d}_00"
+            urls.append(DEM_COPERNICUS.format(t=t))
+    return urls
 
 
 # ------------------------------------------------------------------------------------------ integridad

@@ -45,3 +45,11 @@ def test_uranio_excluye_lo_que_no_es_roca():
     assert len(u[u['fuente'] == 'GE27']) == 45                     # 48 muestras menos 3 suelos
     assert len(u[u['fuente'] == 'IPEN']) == 19                     # 20 menos la torbernita
     assert u['U_ppm'].max() < 10_000
+
+
+def test_teselas_del_dem():
+    """El área (−75,6 a −74,5; −11,8 a −10,5) cae en 4 teselas de 1°, nombradas por su esquina suroeste."""
+    from geocomp.acceso import teselas_dem
+    urls = teselas_dem((-75.55, -11.76, -74.54, -10.49))
+    assert len(urls) == 4
+    assert any('S12_00_W076_00' in u for u in urls)

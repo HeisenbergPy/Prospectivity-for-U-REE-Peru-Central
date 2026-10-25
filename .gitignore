@@ -19,3 +19,6 @@ Thumbs.db
 
 # Cuadernos ejecutados desde la terminal (nbconvert --output-dir salida)
 salida/
+
+# Descargas de los scripts (se rehacen con scripts/descargar_datos.py)
+descargas/

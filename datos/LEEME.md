@@ -13,7 +13,9 @@ Copia idéntica en Google Drive: https://drive.google.com/drive/folders/17-0XKJ0
 | `contexto/` | `departamentos.shp` | Departamentos del Perú (INGEMMET), solo para el mapa de ubicación. Es el único archivo modificado: se quitaron los lagos y se simplificó el contorno a 0,005° (~500 m), para que pese 0,2 MB en lugar de 6 MB |
 | | `provincias.shp`, `capitales.shp` | Límites provinciales y capitales de distrito y provincia (INGEMMET) |
 | `gravedad/` | `gravimetria_estaciones.shp` | 192 estaciones: `GRAV_MGAL` (gravedad observada) y `BOUG_MGAL` (anomalía de Bouguer, mGal) |
-| | `gravedad_XGM2019e_bouguer.tif` | Anomalía de Bouguer simple del modelo XGM2019e (mGal), grilla de 0,025° |
+| | `gravedad_XGM2019e_bouguer.tif` | Anomalía de Bouguer simple del modelo XGM2019e (mGal), grilla de 0,025° sobre el elipsoide (h = 0) |
+| | `gravedad_XGM2019e_bouguer_superficie.tif` | La misma grilla evaluada en la superficie del modelo (h = H + N en cada nodo); la usa GC03 |
+| | `xgm2019e_estaciones.csv` | Modelo en cada estación: ondulación del geoide, topografía del modelo y Bouguer a h = 0 y en la superficie; la usa GC02 |
 | `geoquimica/` | `litogeoquimica_roca.shp` | Química de rocas de INGEMMET (texto original); `QUIMICA_RE` es la referencia de cada dato |
 | | `rocas_BDG_2022.shp` | Base de Datos Geoquímicos 2022 (proyectos GE33 y GE36); `F_MTRA` es la fecha (ms desde 1970) |
 | | `materia_critica_U.shp` | Proyecto GE27 de INGEMMET (U en ppm); `GEOLOG_A` describe la muestra |
@@ -38,9 +40,20 @@ Copia idéntica en Google Drive: https://drive.google.com/drive/folders/17-0XKJ0
   - Δg_B = Δg − 2πGρH, con ρ = 2670 kg/m³.
 
   El resultado coincide con las estadísticas que publica ICGEM para la misma grilla: mínimo y máximo con una
-  diferencia de 0,01 mGal o menos. Resolución real: ~9 km. El script de esta síntesis se incorporará al
-  repositorio en la entrega final.
+  diferencia de 0,01 mGal o menos. Resolución real: ~9 km. La síntesis se rehace con
+  `uv run python scripts/sintesis_xgm2019e.py` (descarga los 420 MB de coeficientes a `descargas/`, reproduce la
+  grilla con una diferencia máxima de 0,00002 mGal y calcula la grilla de superficie y la tabla de las estaciones).
 - **Copernicus DEM:** teselas GLO-90 de libre acceso en https://copernicus-dem-90m.s3.amazonaws.com.
+
+## Comprobar la copia con las fuentes
+
+`uv run python scripts/descargar_datos.py` vuelve a descargar las cinco capas de GEOCATMIN, las teselas del DEM y los
+coeficientes de ICGEM en `descargas/` (carpeta que no se sube) y las compara con esta copia, sin modificarla. El
+25/10/2026, las cinco capas coincidieron registro por registro (a menos de 1 m) y el DEM celda por celda.
+
+Servicios de GEOCATMIN: litogeoquímica `SERV_GEOLOGIA_REGIONAL/MapServer/2`, GE27 `SERV_MATERIA_PRIMA_CRITICA/MapServer/31`,
+BDG 2022 `SERV_GEOQUIMICA_2022/MapServer/10`, sedimentos `SERV_GEOQUIMICA/MapServer/1` y estaciones
+`SERV_GEOFISICA/MapServer/4`.
 
 ## Licencias y citas
 

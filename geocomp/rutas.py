@@ -26,6 +26,8 @@ ARCHIVOS = {
     # Gravedad: dos fuentes de la misma variable (anomalía de Bouguer)
     'gravedad_estaciones': DATOS / 'gravedad' / 'gravimetria_estaciones.shp',
     'gravedad_xgm2019e': DATOS / 'gravedad' / 'gravedad_XGM2019e_bouguer.tif',
+    'gravedad_xgm2019e_superficie': DATOS / 'gravedad' / 'gravedad_XGM2019e_bouguer_superficie.tif',
+    'xgm2019e_estaciones': DATOS / 'gravedad' / 'xgm2019e_estaciones.csv',     # modelo en cada estación (script)
     # Uranio en roca: cinco fuentes
     'litogeoquimica': DATOS / 'geoquimica' / 'litogeoquimica_roca.shp',
     'bdg_2022': DATOS / 'geoquimica' / 'rocas_BDG_2022.shp',
