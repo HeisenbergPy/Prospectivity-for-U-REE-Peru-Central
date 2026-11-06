@@ -35,6 +35,8 @@
   .fila { margin: 2px 0; font-size: 12px; }
   .nota { font-size: 11px; color: var(--gris); margin-top: 10px; line-height: 1.45; }
   .nota a { color: var(--azul); }
+  .logos { display: flex; align-items: center; gap: 12px; margin: 0 0 10px; }
+  .logos span { width: 1px; height: 22px; background: var(--borde); }
   #abrir { display: none; }
   @media (max-width: 640px) {
     .panel { width: auto; left: 8px; right: 8px; top: auto; bottom: 8px; max-height: 55%; }
@@ -48,6 +50,7 @@
 <div id="mapa"></div>
 <div class="panel" id="panel">
   <button id="abrir" aria-label="Mostrar u ocultar el panel">☰</button>
+  <div class="logos"><img src="logo_andeanx.png" alt="AndeanX" style="height: 18px;"><span></span><img src="logo_pucp.png" alt="PUCP" style="height: 24px;"></div>
   <h1>Prospectivity for "U - REE"<br>Peru Central</h1>
   <p class="sub">Favorabilidad para uranio y tierras raras en la Cordillera Oriental de Junín y Pasco</p>
 

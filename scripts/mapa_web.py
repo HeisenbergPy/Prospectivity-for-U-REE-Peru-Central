@@ -9,6 +9,7 @@ Uso, desde la carpeta del repositorio y después de ejecutar GC04:
 """
 
 import json
+import shutil
 
 import geopandas as gpd
 import matplotlib.pyplot as plt
@@ -81,6 +82,10 @@ def main():
     puntos = puntos[(puntos.U_pos == 1) | (puntos.SREE_pos == 1)].round({'U_ppm': 1, 'SREE_ppm': 0})
     vectores = {'aoi': json.loads(aoi[['geometry']].to_json()), 'franja': json.loads(franja[['geometry']].to_json()),
                 'positivas': json.loads(puntos.to_json(drop_id=True))}
+
+    '''Logos de la cabecera del panel'''
+    for logo in ('logo_andeanx.png', 'logo_pucp.png'):
+        shutil.copy(RAIZ / 'recursos' / 'imagenes' / logo, DOCS / logo)
 
     plantilla = (RAIZ / 'scripts' / 'plantilla_mapa_web.html').read_text(encoding='utf-8')
     rampa = ', '.join(to_hex(plt.get_cmap('cmc.batlow')(t)) for t in np.linspace(0, 1, 9))
