@@ -19,8 +19,8 @@
 > (gravity stations against the XGM2019e global model; uranium in rock from five surveys), integrates 40 predictors on
 > a 250 m grid, and trains five machine learning models (logistic regression, SVM, random forest, gradient boosting and
 > a neural network) with nested cross-validation on 32 km spatial blocks, against a geological baseline. Stream
-> sediment beryllium and Bouguer gravity are the leading predictors of uranium in all five models. The final product is
-> a 73 km² area that is top 5 % for both U and REE. Open the [interactive map](https://heisenbergpy.github.io/Prospectivity-for-U-REE-Peru-Central/)
+> sediment beryllium and Bouguer gravity are the leading predictors of uranium in all five models. The cells in the top
+> 5 % for both U and REE cover 73 km². Open the [interactive map](https://heisenbergpy.github.io/Prospectivity-for-U-REE-Peru-Central/)
 > or run [GC04 in Colab](https://colab.research.google.com/github/HeisenbergPy/Prospectivity-for-U-REE-Peru-Central/blob/main/cuadernos/GC04_modelo_prospectividad.ipynb).
 
 # **1. Introducción**
@@ -28,9 +28,8 @@
 ---
 En el Perú no hay radiometría aérea pública, que es la herramienta usual para explorar uranio. Lo que existe son
 datos de INGEMMET, del Instituto Peruano de Energía Nuclear (IPEN) y de modelos globales, tomados en distintos años y
-analizados con métodos distintos. Este trabajo recorre el camino completo, desde esos datos hasta un área prioritaria
-de exploración: primero comprueba si las fuentes son comparables, luego mide con qué variables se relaciona el
-uranio y, con esos resultados, entrena modelos de prospectividad para uranio y tierras raras (ΣREE).
+analizados con métodos distintos. En este trabajo comparamos las fuentes, analizamos con qué variables se relaciona
+el uranio y, con esos resultados, entrenamos modelos de prospectividad para uranio y tierras raras (ΣREE).
 
 Preguntas:
 
@@ -202,11 +201,12 @@ favorable donde hay más Be y la anomalía es más negativa, como se espera sobr
 
 ![Validación anidada de los cinco modelos](figuras/GC04_04_validacion_anidada.png)
 
-**Producto.** Los mapas se expresan en percentiles del área, porque las probabilidades no están calibradas. Las celdas
+**Zonas prioritarias.** Los mapas se expresan en percentiles del área, porque las probabilidades no están calibradas. Las celdas
 en la clase A (5 % más favorable) para U y para ΣREE a la vez suman 73 km², y el blanco donde coinciden todos los
 modelos, 16 km² entre San Ramón y La Merced. En la franja sur reservada como prueba, el modelo de U supera a la línea
 base (ROC-AUC de 0,70 frente a 0,63). La prueba contra el azar espacial no es significativa (p = 0,10 para U), porque
-los positivos están muy agrupados: los mapas sirven para priorizar dónde muestrear, no como prueba de mineralización.
+los positivos están muy agrupados: los mapas sirven para decidir dónde muestrear primero, pero no prueban que haya
+mineralización.
 Los mapas se pueden recorrer en el [mapa interactivo](https://heisenbergpy.github.io/Prospectivity-for-U-REE-Peru-Central/).
 
 ![Zonas prioritarias para U y tierras raras](figuras/GC04_10_zonas_prioritarias.png)
