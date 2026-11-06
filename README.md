@@ -237,10 +237,10 @@ Los mapas se pueden recorrer en el [mapa interactivo](https://heisenbergpy.githu
 # **8. Declaración de uso de inteligencia artificial**
 
 ---
-Se utilizó una herramienta de inteligencia artificial generativa como apoyo en la programación de las funciones y de
-los cuadernos, en la redacción de los textos y en la edición de las gráficas (formato, paleta de colores, tipografía y
-composición de las figuras y de las imágenes de este README). Los autores revisaron el código, los resultados y los
-textos, y son responsables de su contenido.
+Los autores plantearon el problema y las preguntas del trabajo, eligieron las fuentes de datos y revisaron y
+aprobaron cada decisión, resultado y texto, y son responsables del contenido. Se utilizó una herramienta de
+inteligencia artificial generativa como apoyo en tareas específicas: la escritura y depuración del código, la
+redacción de los textos y la edición de las gráficas y de las imágenes de este README.
 
 # **9. Licencia y cita**
 
