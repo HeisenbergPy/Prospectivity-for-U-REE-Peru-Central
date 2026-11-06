@@ -5,6 +5,7 @@
 | `paneles.py` | Genera en `imagenes/` los mapas sin ejes que usan los diseños (ubicación, relieve, anomalía de Bouguer, U en roca, curvas de nivel, favorabilidad del U y zonas prioritarias); las dos últimas leen `resultados/`, así que se ejecuta después de GC04 |
 | `marco.py` | Genera en `imagenes/` los fondos de la portada, de la vista previa y del encabezado del perfil: panel oscuro con curvas de nivel reales del área en morado, línea gris biselada y esquina con degradado (la estética de las presentaciones del proyecto) |
 | `diseno/portada.html` | Portada del README |
+| `imagenes/logo_andeanx.png`, `imagenes/logo_pucp.png` | Logos de AndeanX y de la PUCP de la portada (fondo blanco convertido en transparente) |
 | `diseno/flujo.html` | Diagrama del flujo de trabajo del repositorio |
 | `diseno/resultados.html` | Resultados principales de GC02 y GC03 |
 | `diseno/modelo.html` | Resultados de los modelos de prospectividad (GC04) |
