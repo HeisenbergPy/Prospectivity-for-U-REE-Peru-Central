@@ -10,6 +10,7 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parents[1]
 DATOS = RAIZ / 'datos'
 FIGURAS = RAIZ / 'figuras'
+RESULTADOS = RAIZ / 'resultados'           # mapas que genera GC04 (GeoTIFF)
 MANIFIESTO = DATOS / 'manifiesto.csv'
 
 # ------------------------------------------------------------------------------------------ coordenadas
@@ -37,4 +38,8 @@ ARCHIVOS = {
     # Otras variables
     'sedimentos': DATOS / 'geoquimica' / 'sedimentos_quebrada.shp',
     'dem_90m': DATOS / 'elevacion' / 'dem_copernicus_90m.tif',
+    # Modelo de prospectividad (GC04): variables en la grilla de 250 m y su valor en cada roca
+    'rocas_variables': DATOS / 'modelo' / 'rocas_variables.csv',
+    'catalogo_variables': DATOS / 'modelo' / 'catalogo_variables.csv',
+    'franja_prueba': DATOS / 'modelo' / 'franja_prueba.shp',
 }

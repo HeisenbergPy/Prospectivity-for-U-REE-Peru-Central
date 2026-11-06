@@ -1,5 +1,5 @@
 """Funciones del Trabajo Final de Geocomputación: acceso a los datos, lectura, operaciones espaciales,
-estadística de comparación de fuentes y figuras.
+estadística de comparación de fuentes, modelos de prospectividad y figuras.
 
 Módulos:
     rutas        Rutas del repositorio, archivos de datos y sistemas de coordenadas
@@ -8,4 +8,5 @@ Módulos:
     espacial     Muestreo de rásteres, pares de muestras cercanas y cobertura en una grilla
     estadistica  Métricas de acuerdo entre fuentes y resúmenes por grupo
     graficos     Estilo de las figuras, mapas en UTM, diagramas geoquímicos y guardado
+    modelo       Bloques espaciales, línea base geológica, cinco algoritmos, percentiles y consenso
 """

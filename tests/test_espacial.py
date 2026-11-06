@@ -7,7 +7,8 @@ import rasterio
 from rasterio.transform import from_origin
 from shapely.geometry import Point, box
 
-from geocomp.espacial import cobertura, muestrear_raster, pares_cercanos, raster_a_utm, vecino_mas_cercano
+from geocomp.espacial import (cobertura, muestrear_raster, pares_cercanos, promedio_gaussiano, raster_a_utm,
+                              vecino_mas_cercano)
 
 CRS = 'EPSG:32718'
 
@@ -119,3 +120,14 @@ def test_muestrear_matriz_bilineal():
     valores = muestrear_matriz(matriz, extension, puntos)
     np.testing.assert_allclose(valores[:2], [0.0, 4.5])
     assert np.isnan(valores[2])                                     # fuera de la matriz
+
+
+def test_promedio_gaussiano():
+    """Con dos muestras, la celda equidistante da su media y una celda lejos de ambas queda sin dato."""
+    aoi = gpd.GeoDataFrame(geometry=[box(0, 0, 20_000, 1_000)], crs=CRS)
+    puntos = gpd.GeoDataFrame(geometry=[Point(3_500, 500), Point(5_500, 500)], crs=CRS)
+    media, peso = promedio_gaussiano(puntos, [1.0, 3.0], aoi, celda=1000, banda=1000, radio_max=3000)
+    assert media.shape == (1, 20)
+    assert media[0, 4] == pytest.approx(2.0)            # la celda 4 (centro en x = 4500) está a 1 km de las dos
+    assert np.isnan(media[0, 15])
+    assert peso[0, 15] == 0

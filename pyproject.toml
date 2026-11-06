@@ -1,7 +1,7 @@
 [project]
 name = "geocomp-u-peru-central"
-version = "1.0.0"
-description = "Validación de fuentes de gravimetría y de uranio en roca en la Cordillera Oriental del Perú central"
+version = "2.0.0"
+description = "Validación de fuentes públicas y modelos de prospectividad para uranio y tierras raras en la Cordillera Oriental del Perú central"
 readme = "README.md"
 authors = [
     { name = "Carlos Manuel Gutiérrez Cruzado" },
@@ -28,6 +28,7 @@ dependencies = [
     "ipykernel>=6.29",
     "notebook>=7.2",
     "nbconvert>=7.16",
+    "scikit-learn>=1.5",
 ]
 
 [dependency-groups]

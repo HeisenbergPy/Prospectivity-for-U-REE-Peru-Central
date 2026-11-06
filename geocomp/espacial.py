@@ -1,5 +1,5 @@
-"""Operaciones espaciales: muestrear un ráster en puntos, emparejar muestras cercanas de dos fuentes y medir la
-cobertura de cada fuente en una grilla regular.
+"""Operaciones espaciales: muestrear un ráster en puntos, emparejar muestras cercanas de dos fuentes, medir la
+cobertura de cada fuente en una grilla regular y llevar puntos y rásteres a la grilla de 250 m del modelo.
 """
 
 import geopandas as gpd
@@ -132,13 +132,14 @@ def raster_a_utm(ruta, aoi, celda=250, margen=5000, metodo='bilineal'):
     """Reproyecta un ráster a la grilla UTM del área de estudio (más un margen), con celdas de `celda` metros.
 
     Devuelve (matriz, extension), donde extension = (x_min, x_max, y_min, y_max) sirve para `imshow`.
-    Las celdas sin dato quedan como NaN.
+    Las celdas sin dato quedan como NaN. `metodo`: 'bilineal', 'promedio' (media de los píxeles que caen en la celda,
+    para pasar a una celda más grande) o 'cercano'.
     """
     x0, y0, x1, y1 = aoi.total_bounds
     x0, y0, x1, y1 = x0 - margen, y0 - margen, x1 + margen, y1 + margen
     ancho, alto = int(np.ceil((x1 - x0) / celda)), int(np.ceil((y1 - y0) / celda))
     destino = np.full((alto, ancho), np.nan)
-    remuestreo = Resampling.bilinear if metodo == 'bilineal' else Resampling.nearest
+    remuestreo = {'bilineal': Resampling.bilinear, 'promedio': Resampling.average}.get(metodo, Resampling.nearest)
     with rasterio.open(ruta) as src:
         reproject(source=rasterio.band(src, 1), destination=destino, src_nodata=src.nodata, dst_nodata=np.nan,
                   dst_transform=from_origin(x0, y1, celda, celda), dst_crs=aoi.crs, resampling=remuestreo)
@@ -155,3 +156,25 @@ def muestrear_matriz(matriz, extension, puntos):
     fuera = (col < -0.5) | (fila < -0.5) | (col > columnas - 0.5) | (fila > filas - 0.5)
     valores = map_coordinates(matriz, [fila, col], order=1, mode='nearest')
     return np.where(fuera, np.nan, valores)
+
+
+def promedio_gaussiano(puntos, valores, aoi, celda=250, banda=2500.0, radio_max=7500.0):
+    """Promedio ponderado gaussiano de `valores` en cada celda de la grilla del área de estudio.
+
+    Cada muestra pesa exp(−d² / 2·banda²) según su distancia d al centro de la celda; las celdas sin muestras a menos
+    de `radio_max` quedan como NaN. Devuelve (matriz, suma_de_pesos); la suma de pesos mide la densidad de muestreo.
+    """
+    _exigir_metros(puntos, aoi)
+    x0, y0, x1, y1 = aoi.total_bounds
+    ancho, alto = int(round((x1 - x0) / celda)), int(round((y1 - y0) / celda))
+    xs, ys = np.meshgrid(x0 + celda * (np.arange(ancho) + 0.5), y1 - celda * (np.arange(alto) + 0.5))
+    valores = np.asarray(valores, dtype=float)
+    ok = np.isfinite(valores)
+    muestras = cKDTree(np.c_[puntos.geometry.x.values[ok], puntos.geometry.y.values[ok]])
+    distancias = cKDTree(np.c_[xs.ravel(), ys.ravel()]).sparse_distance_matrix(muestras, radio_max,
+                                                                               output_type='coo_matrix')
+    w = np.exp(-distancias.data ** 2 / (2 * banda ** 2))
+    suma = np.bincount(distancias.row, w * valores[ok][distancias.col], minlength=xs.size)
+    peso = np.bincount(distancias.row, w, minlength=xs.size)
+    media = np.where(peso > 0, suma / np.where(peso > 0, peso, 1), np.nan)
+    return media.reshape(alto, ancho), peso.reshape(alto, ancho)
