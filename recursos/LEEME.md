@@ -10,6 +10,7 @@
 | `diseno/resultados.html` | Resultados principales de GC02 y GC03 |
 | `diseno/modelo.html` | Resultados de los modelos de prospectividad (GC04) |
 | `diseno/vista_previa.html` | Imagen para compartir el repositorio (vista previa de GitHub, 1280 × 640) |
+| `imagenes/*_violeta.png` | Relieve, gravedad, U en roca y zonas prioritarias en tonos violeta (los usa la portada) |
 | `portada.png`, `flujo.png`, `resultados.png`, `modelo.png` | Exportación de las páginas anteriores (resolución 2x) |
 | `vista_previa.jpg` | Exportación de `vista_previa.html` a 1280 × 640 (menos de 1 MB, como pide GitHub) |
 

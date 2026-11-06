@@ -8,6 +8,7 @@ Genera en `recursos/imagenes/` los mapas sin ejes que usan las páginas de `recu
     curvas_nivel.png   curvas de nivel cada 200 m (fondo de la portada, transparente)
     favorabilidad_U.png  percentil de favorabilidad del U (mediana de los modelos hábiles de GC04)
     zonas.png          zonas prioritarias para U y ΣREE (cruce de clases de GC04)
+    *_violeta.png      relieve, gravedad, U en roca y zonas en tonos violeta, para la portada
 
 Uso, desde la carpeta del repositorio (después de ejecutar GC04, que escribe `resultados/`):
     uv run python recursos/paneles.py
@@ -117,5 +118,47 @@ ax.imshow(rgba, extent=ext_res, interpolation='nearest', zorder=2)
 ax.set_xlim(x0, x1)
 ax.set_ylim(y0, y1)
 guardar(fig, 'zonas.png')
+
+'''Versiones en tonos violeta para la portada: relieve sombreado en una rampa del morado oscuro al lavanda claro, la
+misma de las presentaciones del proyecto'''
+from matplotlib.colors import LightSource, LinearSegmentedColormap
+VIOLETA = LinearSegmentedColormap.from_list('violeta', ['#1c1926', '#45405a', '#8a83a3', '#d6d2e3', '#f8f7fb'])
+
+
+def sombra_violeta(ax, opacidad=1.0):
+    z = np.where(np.isfinite(elevacion), elevacion, np.nanmin(elevacion))
+    paso = (extension[1] - extension[0]) / elevacion.shape[1]
+    s_ = LightSource(azdeg=315, altdeg=40).hillshade(z, vert_exag=2.2, dx=paso, dy=paso)
+    ax.imshow(s_, extent=extension, cmap=VIOLETA, vmin=0.05, vmax=1, alpha=opacidad, zorder=0,
+              interpolation='bilinear')
+
+
+fig, ax = mapa_vacio()
+sombra_violeta(ax)
+guardar(fig, 'relieve_violeta.png')
+
+fig, ax = mapa_vacio()
+ax.imshow(xgm, extent=ext_xgm, cmap='cmc.acton', interpolation='bilinear', zorder=0)
+sombra_violeta(ax, opacidad=0.35)
+estaciones.plot(ax=ax, color='white', edgecolor='#26262f', linewidth=0.4, markersize=12, zorder=10)
+ax.set_xlim(x0, x1)
+ax.set_ylim(y0, y1)
+guardar(fig, 'bouguer_violeta.png')
+
+fig, ax = mapa_vacio()
+sombra_violeta(ax, opacidad=0.85)
+alto_u = u_roca.sort_values('U_ppm')
+ax.scatter(alto_u.geometry.x, alto_u.geometry.y, c=np.log10(alto_u.U_ppm.clip(0.3, 60)), cmap='cmc.lajolla',
+           s=14, edgecolor='#1d1830', linewidth=0.3, zorder=10)
+ax.set_xlim(x0, x1)
+ax.set_ylim(y0, y1)
+guardar(fig, 'uranio_violeta.png')
+
+fig, ax = mapa_vacio(alto=9)
+sombra_violeta(ax, opacidad=0.9)
+ax.imshow(rgba, extent=ext_res, interpolation='nearest', zorder=2)
+ax.set_xlim(x0, x1)
+ax.set_ylim(y0, y1)
+guardar(fig, 'zonas_violeta.png')
 
 print('Imágenes guardadas en recursos/imagenes/')

@@ -4,79 +4,60 @@
 <meta charset="utf-8">
 <title>Portada</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700;1,800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700;1,800&amp;display=swap" rel="stylesheet">
 <style>
 body { margin: 0; }
 .lienzo { position: relative; width: 1600px; height: 640px; overflow: hidden; font-family: 'Open Sans', sans-serif;
           background: url(../imagenes/marco_portada.png) 0 0 / 1600px 640px no-repeat; color: #fff; }
-.mono { font-family: 'IBM Plex Mono', Consolas, monospace; letter-spacing: 0.14em; }
-.degradado { background: linear-gradient(90deg, #2a56c6, #8f3aff); -webkit-background-clip: text; background-clip: text;
-             color: transparent; }
-.lavanda { background: linear-gradient(90deg, #f4ebff, #c79dff); -webkit-background-clip: text; background-clip: text; text-shadow: none; filter: drop-shadow(0 2px 8px rgba(10, 6, 24, 0.45));
-           color: transparent; }
-h1 { margin: 0; font-weight: 800; font-style: italic; font-size: 58px; line-height: 1.04; letter-spacing: -0.01em;
+.lavanda { color: #d9c4ff; text-shadow: 0 0 22px rgba(143, 58, 255, 0.55), 0 2px 10px rgba(10, 6, 24, 0.6); }
+h1 { margin: 0; font-weight: 800; font-style: italic; font-size: 60px; line-height: 1.03; letter-spacing: -0.01em;
      text-shadow: 0 2px 18px rgba(10, 6, 24, 0.6); }
-.panel { position: absolute; display: flex; flex-direction: column; gap: 10px; width: 166px; }
-.panel img { width: 166px; height: 212px; display: block; border-radius: 6px; border: 1px solid #c9c9d6;
-             box-shadow: 0 6px 16px rgba(40, 20, 80, 0.18); }
-.num { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%;
-       background: linear-gradient(135deg, #2a56c6, #8f3aff); color: #fff; font-size: 12px; font-weight: 700;
-       font-style: italic; margin-right: 8px; vertical-align: 1px; }
-.titulo-panel { font-weight: 800; font-style: italic; font-size: 15px; color: #26262f; white-space: nowrap; }
-.texto-panel { font-style: italic; font-size: 12.5px; line-height: 1.35; color: #4a4a5c; }
-.dato b { display: block; font-weight: 800; font-style: italic; font-size: 30px; line-height: 1.05; }
-.dato span { font-style: italic; font-size: 13px; color: #4a4a5c; }
+.sombra { text-shadow: 0 1px 8px rgba(10, 6, 24, 0.85); }
+.mapa { position: absolute; border: 1px solid #3a3150; box-shadow: 0 10px 24px rgba(38, 20, 80, 0.22); display: block; }
+.pie { position: absolute; display: flex; flex-direction: column; gap: 3px; }
+.pie b { font-weight: 800; font-style: italic; font-size: 15px; color: #2b2340; }
+.pie span { font-style: italic; font-size: 12.5px; line-height: 1.35; color: #5a5270; }
+.caja { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin: 0 6px 0 0; vertical-align: -1px; }
+.ley { position: absolute; font-style: italic; font-size: 12.5px; color: #4a4262; display: flex; gap: 16px; }
 </style>
 </head>
 <body>
 <div class="lienzo">
   <!-- Panel oscuro: título -->
-  <div style="position: absolute; left: 64px; top: 58px; width: 560px;">
-    <div class="mono" style="font-size: 12px; color: #c9a7ff;">TRABAJO FINAL / GEOCOMPUTACIÓN 1GEO20 / PUCP 2026-II</div>
-    <h1 style="margin-top: 22px;">Prospectivity for<br><span class="lavanda">"U - REE"</span><br>Peru Central</h1>
-    <p style="margin: 22px 0 0; width: 540px; font-style: italic; font-size: 17px; line-height: 1.5; color: #ddd7ee;
-              text-shadow: 0 1px 8px rgba(10, 6, 24, 0.8);">
+  <div style="position: absolute; left: 64px; top: 66px; width: 560px;">
+    <div class="sombra" style="font-style: italic; font-size: 15px; color: #cdb6ff;">Trabajo Final de Geocomputación, PUCP 2026-II</div>
+    <h1 style="margin-top: 18px;">Prospectivity for<br><span class="lavanda">"U - REE"</span><br>Peru Central</h1>
+    <p class="sombra" style="margin: 22px 0 0; width: 520px; font-style: italic; font-size: 17px; line-height: 1.5; color: #ddd7ee;">
       Validación de fuentes públicas, 40 variables integradas y cinco modelos de aprendizaje automático para uranio y
       tierras raras en la Cordillera Oriental de Junín y Pasco.</p>
   </div>
-  <div style="position: absolute; left: 64px; top: 520px; text-shadow: 0 1px 8px rgba(10, 6, 24, 0.8);">
+  <div class="sombra" style="position: absolute; left: 64px; top: 520px;">
     <div style="font-weight: 700; font-size: 16px;">Carlos Manuel Gutiérrez Cruzado &nbsp;/&nbsp; Félix Bryan Cordero Escobar</div>
     <div style="font-style: italic; font-size: 14px; color: #c3bcd9; margin-top: 4px;">Pontificia Universidad Católica del Perú, Lima</div>
   </div>
 
-  <!-- Área clara: mapas -->
-  <div class="mono" style="position: absolute; left: 760px; top: 42px; font-size: 12px; color: #6a4fc0;">CORDILLERA ORIENTAL / JUNÍN Y PASCO</div>
-  <div style="position: absolute; right: 44px; top: 26px; display: flex; align-items: center; gap: 22px;">
-    <img src="../imagenes/logo_andeanx.png" alt="AndeanX" style="height: 30px;">
-    <span style="width: 1px; height: 36px; background: #b9b3cf;"></span>
-    <img src="../imagenes/logo_pucp.png" alt="PUCP" style="height: 38px;">
+  <!-- Área clara: mapa principal y tres mapas de las fuentes -->
+  <img class="mapa" src="../imagenes/zonas_violeta.png" alt="Zonas prioritarias" style="left: 792px; top: 40px; width: 368px; height: 468px;">
+  <div class="ley" style="left: 792px; top: 518px;">
+    <span><i class="caja" style="background:#79326e"></i>U y tierras raras</span>
+    <span><i class="caja" style="background:#f7aa5f"></i>Solo uranio</span>
+    <span><i class="caja" style="background:#a79acd"></i>Solo tierras raras</span>
   </div>
-  <div class="panel" style="left: 760px; top: 96px;">
-    <img src="../imagenes/relieve.png" alt="Relieve">
-    <div class="titulo-panel"><span class="num">1</span>Relieve</div>
-    <div class="texto-panel">Copernicus DEM GLO-90</div>
+
+  <div style="position: absolute; left: 1198px; top: 40px; display: flex; align-items: center; gap: 18px;">
+    <img src="../imagenes/logo_andeanx.png" alt="AndeanX" style="height: 26px;">
+    <span style="width: 1px; height: 32px; background: #b3a8d3;"></span>
+    <img src="../imagenes/logo_pucp.png" alt="PUCP" style="height: 34px;">
   </div>
-  <div class="panel" style="left: 952px; top: 96px;">
-    <img src="../imagenes/bouguer.png" alt="Anomalía de Bouguer">
-    <div class="titulo-panel"><span class="num">2</span>Gravedad</div>
-    <div class="texto-panel">XGM2019e y 192 estaciones de INGEMMET</div>
-  </div>
-  <div class="panel" style="left: 1144px; top: 96px;">
-    <img src="../imagenes/uranio.png" alt="Uranio en roca">
-    <div class="titulo-panel"><span class="num">3</span>U en roca</div>
-    <div class="texto-panel">606 rocas de cinco fuentes</div>
-  </div>
-  <div class="panel" style="left: 1336px; top: 96px;">
-    <img src="../imagenes/zonas.png" alt="Zonas prioritarias">
-    <div class="titulo-panel"><span class="num">4</span>Zonas prioritarias</div>
-    <div class="texto-panel">Consenso de cinco modelos para U y ΣREE</div>
-  </div>
-  <div style="position: absolute; left: 780px; top: 440px; display: flex; gap: 46px;">
-    <div class="dato"><b class="degradado">794</b><span>rocas analizadas</span></div>
-    <div class="dato"><b class="degradado">40</b><span>variables integradas</span></div>
-    <div class="dato"><b class="degradado">5</b><span>algoritmos y su consenso</span></div>
-    <div class="dato"><b class="degradado">73 km²</b><span>zona prioritaria U + REE</span></div>
-  </div>
+
+  <img class="mapa" src="../imagenes/relieve_violeta.png" alt="Relieve" style="left: 1198px; top: 104px; width: 96px; height: 122px;">
+  <div class="pie" style="left: 1312px; top: 132px; width: 230px;"><b>Relieve</b><span>Copernicus DEM GLO-90</span></div>
+
+  <img class="mapa" src="../imagenes/bouguer_violeta.png" alt="Gravedad" style="left: 1198px; top: 244px; width: 96px; height: 122px;">
+  <div class="pie" style="left: 1312px; top: 272px; width: 230px;"><b>Gravedad</b><span>Modelo XGM2019e y 192 estaciones de INGEMMET</span></div>
+
+  <img class="mapa" src="../imagenes/uranio_violeta.png" alt="Uranio en roca" style="left: 1198px; top: 384px; width: 96px; height: 122px;">
+  <div class="pie" style="left: 1312px; top: 412px; width: 230px;"><b>Uranio en roca</b><span>606 rocas de cinco fuentes</span></div>
 </div>
 </body>
 </html>

@@ -112,7 +112,12 @@ def marco(ancho, alto, borde, esquina, nombre, claro=(236, 237, 242), ancho_gris
     sombra = mascara(oscuro.union(morado).union(gris), ancho, alto).filter(ImageFilter.GaussianBlur(10 * e))
     capa_s = Image.new('RGBA', (ancho, alto), (20, 10, 40, 0))
     capa_s.putalpha(Image.fromarray((np.asarray(sombra) * 0.3).astype(np.uint8)))
-    base = Image.new('RGBA', (ancho, alto), (*claro, 255))
+    '''Área clara con tonalidad lavanda (degradado diagonal) y las mismas curvas de nivel, muy tenues'''
+    t = np.clip(xx / ancho * 0.6 + yy / alto * 0.4, 0, 1)[..., None]
+    rgb = np.array([244, 241, 251]) * (1 - t) + np.array([224, 217, 242]) * t
+    base = Image.fromarray(np.dstack([rgb, np.full((alto, ancho), 255)]).astype(np.uint8), 'RGBA')
+    base = Image.alpha_composite(base, dibujar(lineas, ancho, alto, (150, 120, 210, 34), (140, 105, 205, 60),
+                                               0.8 * e, 1.3 * e))
     base = Image.alpha_composite(base, capa_s)
     base.paste(img, (0, 0), Image.fromarray(np.maximum(np.asarray(m_osc), np.asarray(m_mor))))
     base.paste(Image.new('RGBA', (ancho, alto), (*GRIS, 255)), (0, 0), m_gris)
