@@ -1,0 +1,41 @@
+variable,familia,descripcion,pct_area,archivo
+clase_intrusivo,Geología,1 si la celda es intrusivo (geología 1:50 000),100.0,datos/modelo/variables/clase_intrusivo.tif
+clase_volcanico,Geología,1 si la celda es volcánico (geología 1:50 000),100.0,datos/modelo/variables/clase_volcanico.tif
+clase_sedimentario,Geología,1 si la celda es sedimentario (geología 1:50 000),100.0,datos/modelo/variables/clase_sedimentario.tif
+clase_metamorfico,Geología,1 si la celda es metamórfico (geología 1:50 000),100.0,datos/modelo/variables/clase_metamorfico.tif
+clase_cuaternario,Geología,1 si la celda es depósito cuaternario (geología 1:50 000),100.0,datos/modelo/variables/clase_cuaternario.tif
+pulso_PT,Geología,"1 si la celda es intrusivo permotriásico (U-Pb, Parte 1)",100.0,datos/modelo/variables/pulso_PT.tif
+pulso_carbonifero,Geología,"1 si la celda es intrusivo carbonífero (U-Pb, Parte 1)",100.0,datos/modelo/variables/pulso_carbonifero.tif
+pulso_proterozoico,Geología,"1 si la celda es intrusivo proterozoico (U-Pb, Parte 1)",100.0,datos/modelo/variables/pulso_proterozoico.tif
+litologia_felsica,Geología,"1 si la unidad intrusiva se describe como granito, sienogranito, monzogranito, sienita, aplita, pegmatita o riolita",100.0,datos/modelo/variables/litologia_felsica.tif
+dist_PT_km,Geología,Distancia (km) al intrusivo permotriásico más cercano (0 dentro),100.0,datos/modelo/variables/dist_PT_km.tif
+dist_contacto_km,Geología,Distancia (km) al contacto intrusivo más cercano (sin el borde artificial del AOI),100.0,datos/modelo/variables/dist_contacto_km.tif
+dist_san_ramon_km,Geología,"Distancia (km) al Sienogranito San Ramón (variable de control de ""memoria del lugar"")",100.0,datos/modelo/variables/dist_san_ramon_km.tif
+dist_falla_km,Estructural,Distancia (km) a la falla 1:50 000 más cercana,100.0,datos/modelo/variables/dist_falla_km.tif
+dens_falla,Estructural,Longitud de fallas 1:50 000 por km² (radio 5 km),100.0,datos/modelo/variables/dens_falla.tif
+dist_falla_regional_km,Estructural,Distancia (km) al sistema de fallas regional más cercano,100.0,datos/modelo/variables/dist_falla_regional_km.tif
+dens_pliegue,Estructural,Longitud de ejes de pliegue por km² (radio 5 km),100.0,datos/modelo/variables/dens_pliegue.tif
+sed_La,Sedimentos,"Sedimentos de quebrada: log10 La (ppm), promedio gaussiano (2,5 km)",80.7,datos/modelo/variables/sed_La.tif
+sed_Y,Sedimentos,"Sedimentos de quebrada: log10 Y (ppm), promedio gaussiano (2,5 km)",80.7,datos/modelo/variables/sed_Y.tif
+sed_Be,Sedimentos,"Sedimentos de quebrada: log10 Be (ppm), promedio gaussiano (2,5 km)",79.4,datos/modelo/variables/sed_Be.tif
+sed_K,Sedimentos,"Sedimentos de quebrada: log10 K (%), promedio gaussiano (2,5 km)",80.7,datos/modelo/variables/sed_K.tif
+sed_La_Y,Sedimentos,"Sedimentos: log10(La/Y), fraccionamiento de REE ligeras frente a pesadas",80.7,datos/modelo/variables/sed_La_Y.tif
+sed_densidad,Sedimentos,Densidad de muestreo de sedimentos (suma de pesos gaussianos),100.0,datos/modelo/variables/sed_densidad.tif
+cue_La,Sedimentos (cuenca),Sedimentos por cuenca de drenaje: log10 La (ppm),71.2,datos/modelo/variables/cue_La.tif
+cue_Y,Sedimentos (cuenca),Sedimentos por cuenca de drenaje: log10 Y (ppm),71.2,datos/modelo/variables/cue_Y.tif
+cue_Be,Sedimentos (cuenca),Sedimentos por cuenca de drenaje: log10 Be (ppm),70.8,datos/modelo/variables/cue_Be.tif
+cue_K,Sedimentos (cuenca),Sedimentos por cuenca de drenaje: log10 K (%),71.2,datos/modelo/variables/cue_K.tif
+cue_La_Y,Sedimentos (cuenca),Sedimentos por cuenca: log10(La/Y),71.2,datos/modelo/variables/cue_La_Y.tif
+gravedad_bouguer,Geofísica,Anomalía de Bouguer interpolada (mGal); vacía a más de 15 km de una estación,54.9,datos/modelo/variables/gravedad_bouguer.tif
+grav_dist_estacion_km,Geofísica,Distancia (km) a la estación gravimétrica más cercana,100.0,datos/modelo/variables/grav_dist_estacion_km.tif
+grav_XGM2019e,Geofísica,"Anomalía de Bouguer simple XGM2019e (mGal), modelo global ~9 km",100.0,datos/modelo/variables/grav_XGM2019e.tif
+grav_residual,Geofísica,Residual gravimétrico (mGal): estaciones interpoladas − XGM2019e; vacío a > 15 km de una estación,54.9,datos/modelo/variables/grav_residual.tif
+mag_EMAG2,Geofísica,"Anomalía magnética EMAG2v3 (nT), remuestreo bilineal desde ≈ 3,7 km",98.5,datos/modelo/variables/mag_EMAG2.tif
+mag_gradiente,Geofísica,Magnitud del gradiente horizontal magnético (nT/km),98.1,datos/modelo/variables/mag_gradiente.tif
+elevacion,Relieve,"Elevación (m s. n. m.), DEM Copernicus GLO-90 promediado a 250 m",100.0,datos/modelo/variables/elevacion.tif
+pendiente,Relieve,Pendiente (grados),100.0,datos/modelo/variables/pendiente.tif
+rugosidad,Relieve,"Desviación estándar de la elevación en 1,25 km (m)",100.0,datos/modelo/variables/rugosidad.tif
+ls_oxidos_fe,Landsat,Landsat 8/9: rojo/azul (óxidos de Fe férrico),99.0,datos/modelo/variables/ls_oxidos_fe.tif
+ls_arcillas,Landsat,Landsat 8/9: SWIR1/SWIR2 (minerales con OH),99.1,datos/modelo/variables/ls_arcillas.tif
+ls_ferroso,Landsat,Landsat 8/9: SWIR1/NIR (hierro ferroso),99.1,datos/modelo/variables/ls_ferroso.tif
+ls_ndvi,Landsat,Landsat 8/9: NDVI (control de vegetación),99.0,datos/modelo/variables/ls_ndvi.tif
