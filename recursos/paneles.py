@@ -6,16 +6,20 @@ Genera en `recursos/imagenes/` los mapas sin ejes que usan las páginas de `recu
     bouguer.png        anomalía de Bouguer del modelo XGM2019e y estaciones de INGEMMET
     uranio.png         muestras de roca con U, por fuente
     curvas_nivel.png   curvas de nivel cada 200 m (fondo de la portada, transparente)
+    favorabilidad_U.png  percentil de favorabilidad del U (mediana de los modelos hábiles de GC04)
+    zonas.png          zonas prioritarias para U y ΣREE (cruce de clases de GC04)
 
-Uso, desde la carpeta del repositorio:
+Uso, desde la carpeta del repositorio (después de ejecutar GC04, que escribe `resultados/`):
     uv run python recursos/paneles.py
 """
 
 import matplotlib.pyplot as plt
 import numpy as np
+import rasterio
+from matplotlib.colors import to_rgb
 
 from geocomp import espacial, graficos as graf, lectura
-from geocomp.rutas import ARCHIVOS, RAIZ
+from geocomp.rutas import ARCHIVOS, RAIZ, RESULTADOS
 
 SALIDA = RAIZ / 'recursos' / 'imagenes'
 SALIDA.mkdir(parents=True, exist_ok=True)
@@ -86,5 +90,32 @@ x = np.linspace(extension[0], extension[1], elevacion.shape[1])
 y = np.linspace(extension[3], extension[2], elevacion.shape[0])
 ax.contour(x, y, elevacion, levels=np.arange(400, 5000, 200), colors='white', linewidths=0.5)
 guardar(fig, 'curvas_nivel.png', transparente=True)
+
+'''Resultados de GC04: favorabilidad del U y zonas prioritarias sobre el relieve'''
+def leer_resultado(nombre):
+    with rasterio.open(RESULTADOS / nombre) as src:
+        b = src.bounds
+        return src.read(1), (b.left, b.right, b.bottom, b.top)
+
+
+fig, ax = mapa_vacio()
+graf.relieve(ax, elevacion, extension, opacidad=0.9)
+mediana, ext_res = leer_resultado('U_mediana.tif')
+ax.imshow(mediana, extent=ext_res, cmap='cmc.batlow', vmin=0, vmax=100, alpha=0.78, interpolation='nearest', zorder=2)
+ax.set_xlim(x0, x1)
+ax.set_ylim(y0, y1)
+guardar(fig, 'favorabilidad_U.png')
+
+COLOR_CRUCE = {4: '#79326e', 3: '#bd5888', 2: '#f7aa5f', 1: '#a79acd'}
+cruce, ext_res = leer_resultado('cruce_U_SREE.tif')
+rgba = np.zeros(cruce.shape + (4,))
+for k, c in COLOR_CRUCE.items():
+    rgba[cruce == k] = [*to_rgb(c), 0.88]
+fig, ax = mapa_vacio()
+graf.relieve(ax, elevacion, extension, opacidad=0.9)
+ax.imshow(rgba, extent=ext_res, interpolation='nearest', zorder=2)
+ax.set_xlim(x0, x1)
+ax.set_ylim(y0, y1)
+guardar(fig, 'zonas.png')
 
 print('Imágenes guardadas en recursos/imagenes/')

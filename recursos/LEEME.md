@@ -2,15 +2,18 @@
 
 | Archivo | Contenido |
 |---|---|
-| `paneles.py` | Genera en `imagenes/` los mapas sin ejes que usan los diseños (ubicación, relieve, anomalía de Bouguer, U en roca y curvas de nivel) |
+| `paneles.py` | Genera en `imagenes/` los mapas sin ejes que usan los diseños (ubicación, relieve, anomalía de Bouguer, U en roca, curvas de nivel, favorabilidad del U y zonas prioritarias); las dos últimas leen `resultados/`, así que se ejecuta después de GC04 |
 | `diseno/portada.html` | Portada del README |
 | `diseno/flujo.html` | Diagrama del flujo de trabajo del repositorio |
 | `diseno/resultados.html` | Resultados principales de GC02 y GC03 |
-| `portada.png`, `flujo.png`, `resultados.png` | Exportación de las tres páginas anteriores (resolución 2x) |
+| `diseno/modelo.html` | Resultados de los modelos de prospectividad (GC04) |
+| `diseno/vista_previa.html` | Imagen para compartir el repositorio (vista previa de GitHub, 1280 × 640) |
+| `portada.png`, `flujo.png`, `resultados.png`, `modelo.png` | Exportación de las páginas anteriores (resolución 2x) |
+| `vista_previa.jpg` | Exportación de `vista_previa.html` a 1280 × 640 (menos de 1 MB, como pide GitHub) |
 
 Los diseños son páginas HTML con CSS y usan las familias tipográficas IBM Plex (Google Fonts, licencia SIL Open Font
 License). Las cifras de `resultados.html` provienen de los cuadernos `cuadernos/GC02_validacion_fuentes.ipynb` y
-`cuadernos/GC03_relacion_variables.ipynb`.
+`cuadernos/GC03_relacion_variables.ipynb`; las de `modelo.html`, de `cuadernos/GC04_modelo_prospectividad.ipynb`.
 
 ## Cómo regenerar las imágenes
 
@@ -32,3 +35,5 @@ License). Las cifras de `resultados.html` provienen de los cuadernos `cuadernos/
    | `portada.html` | 1600 × 640 |
    | `flujo.html` | 1600 × 560 |
    | `resultados.html` | 1600 × 400 |
+   | `modelo.html` | 1600 × 620 |
+   | `vista_previa.html` | 1280 × 640 (exportada con factor 2 y reducida a 1280 × 640 en JPG) |

@@ -1,0 +1,12 @@
+{
+  "title": "Prospectivity for \"U - REE\" - Peru Central: validación de fuentes públicas y modelos de prospectividad para uranio y tierras raras",
+  "upload_type": "software",
+  "description": "Flujo reproducible en Python que valida fuentes públicas de gravimetría y de uranio en roca en la Cordillera Oriental del Perú central (Junín y Pasco), integra 40 variables en una grilla de 250 m y entrena cinco algoritmos con validación anidada por bloques espaciales para obtener mapas de favorabilidad para uranio y tierras raras. Trabajo Final del curso Geocomputación (1GEO20), Pontificia Universidad Católica del Perú, 2026-II.",
+  "creators": [
+    {"name": "Gutiérrez Cruzado, Carlos Manuel", "affiliation": "Pontificia Universidad Católica del Perú"},
+    {"name": "Cordero Escobar, Félix Bryan", "affiliation": "Pontificia Universidad Católica del Perú"}
+  ],
+  "license": "MIT",
+  "language": "spa",
+  "keywords": ["mineral prospectivity", "uranium", "rare earth elements", "machine learning", "spatial cross-validation", "gravity", "XGM2019e", "Peru"]
+}

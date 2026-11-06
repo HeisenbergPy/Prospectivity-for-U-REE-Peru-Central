@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "Si usas este repositorio, cítalo con estos datos."
-title: 'Prospectivity for "U - REE" - Peru Central: validación de fuentes públicas de gravimetría y uranio en roca'
+title: 'Prospectivity for "U - REE" - Peru Central: validación de fuentes públicas y modelos de prospectividad para uranio y tierras raras'
 type: software
 authors:
   - family-names: "Gutiérrez Cruzado"
@@ -10,14 +10,22 @@ authors:
     given-names: "Félix Bryan"
     affiliation: "Pontificia Universidad Católica del Perú"
 repository-code: "https://github.com/HeisenbergPy/Prospectivity-for-U-REE-Peru-Central"
+url: "https://heisenbergpy.github.io/Prospectivity-for-U-REE-Peru-Central/"
+abstract: >-
+  Flujo reproducible en Python que valida fuentes públicas de gravimetría y de uranio en roca en la Cordillera
+  Oriental del Perú central, integra 40 variables en una grilla de 250 m y entrena cinco algoritmos con validación
+  anidada por bloques espaciales para obtener mapas de favorabilidad para uranio y tierras raras.
 license: MIT
-version: "1.0.0"
-date-released: "2026-10-25"
+version: "2.0.0"
+date-released: "2026-11-06"
 keywords:
   - geocomputación
+  - prospectividad mineral
   - uranio
+  - tierras raras
+  - aprendizaje automático
+  - validación espacial
   - gravimetría
+  - XGM2019e
   - INGEMMET
   - Perú
-  - síntesis armónica
-  - XGM2019e

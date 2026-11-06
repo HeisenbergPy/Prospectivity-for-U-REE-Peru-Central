@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Vista previa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Open+Sans:ital,wght@0,400;0,700;1,400;1,800&amp;display=swap" rel="stylesheet">
+<style>
+body { margin: 0; }
+.lienzo { position: relative; width: 1280px; height: 640px; overflow: hidden; font-family: 'Open Sans', sans-serif;
+          background: url(../imagenes/marco_vista_previa.png) 0 0 / 1280px 640px no-repeat; color: #fff; }
+.mono { font-family: 'IBM Plex Mono', Consolas, monospace; letter-spacing: 0.14em; }
+.lavanda { background: linear-gradient(90deg, #f4ebff, #c79dff); -webkit-background-clip: text; background-clip: text;
+           color: transparent; filter: drop-shadow(0 2px 8px rgba(10, 6, 24, 0.45)); }
+.degradado { background: linear-gradient(90deg, #2a56c6, #8f3aff); -webkit-background-clip: text; background-clip: text;
+             color: transparent; }
+h1 { margin: 0; font-weight: 800; font-style: italic; font-size: 62px; line-height: 1.04; letter-spacing: -0.01em;
+     text-shadow: 0 2px 18px rgba(10, 6, 24, 0.6); }
+.dato b { display: block; font-weight: 800; font-style: italic; font-size: 30px; line-height: 1.05; }
+.dato span { font-style: italic; font-size: 13px; color: #4a4a5c; }
+</style>
+</head>
+<body>
+<div class="lienzo">
+  <div style="position: absolute; left: 60px; top: 70px; width: 520px;">
+    <div class="mono" style="font-size: 13px; color: #c9a7ff;">PYTHON / MACHINE LEARNING / GEOQUÍMICA</div>
+    <h1 style="margin-top: 24px;">Prospectivity for<br><span class="lavanda">"U - REE"</span><br>Peru Central</h1>
+    <p style="margin: 24px 0 0; width: 470px; font-style: italic; font-size: 19px; line-height: 1.5; color: #ddd7ee;
+              text-shadow: 0 1px 8px rgba(10, 6, 24, 0.8);">
+      Mapas de favorabilidad para uranio y tierras raras con datos públicos, cinco algoritmos y validación espacial.</p>
+  </div>
+  <div style="position: absolute; left: 60px; top: 548px; font-weight: 700; font-size: 15px; text-shadow: 0 1px 8px rgba(10, 6, 24, 0.8);">
+    github.com/HeisenbergPy
+  </div>
+  <img src="../imagenes/zonas.png" alt="" style="position: absolute; left: 676px; top: 60px; width: 340px; height: 433px;
+       border-radius: 8px; border: 1px solid #c9c9d6; box-shadow: 0 8px 20px rgba(40, 20, 80, 0.2);">
+  <div style="position: absolute; left: 1046px; top: 92px; display: flex; flex-direction: column; gap: 34px;">
+    <div class="dato"><b class="degradado">40</b><span>variables integradas</span></div>
+    <div class="dato"><b class="degradado">5</b><span>algoritmos validados<br>por bloques espaciales</span></div>
+    <div class="dato"><b class="degradado">73 km²</b><span>zona prioritaria<br>para U y tierras raras</span></div>
+  </div>
+</div>
+</body>
+</html>

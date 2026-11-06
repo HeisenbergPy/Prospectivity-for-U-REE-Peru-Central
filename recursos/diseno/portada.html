@@ -4,46 +4,74 @@
 <meta charset="utf-8">
 <title>Portada</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans+Condensed:wght@500;600&amp;family=IBM+Plex+Sans:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700;1,800&amp;display=swap" rel="stylesheet">
 <style>
-body{margin:0}
-a{color:#f2a65a}a:hover{color:#ffd0a0}
+body { margin: 0; }
+.lienzo { position: relative; width: 1600px; height: 640px; overflow: hidden; font-family: 'Open Sans', sans-serif;
+          background: url(../imagenes/marco_portada.png) 0 0 / 1600px 640px no-repeat; color: #fff; }
+.mono { font-family: 'IBM Plex Mono', Consolas, monospace; letter-spacing: 0.14em; }
+.degradado { background: linear-gradient(90deg, #2a56c6, #8f3aff); -webkit-background-clip: text; background-clip: text;
+             color: transparent; }
+.lavanda { background: linear-gradient(90deg, #f4ebff, #c79dff); -webkit-background-clip: text; background-clip: text; text-shadow: none; filter: drop-shadow(0 2px 8px rgba(10, 6, 24, 0.45));
+           color: transparent; }
+h1 { margin: 0; font-weight: 800; font-style: italic; font-size: 58px; line-height: 1.04; letter-spacing: -0.01em;
+     text-shadow: 0 2px 18px rgba(10, 6, 24, 0.6); }
+.panel { position: absolute; display: flex; flex-direction: column; gap: 10px; width: 166px; }
+.panel img { width: 166px; height: 212px; display: block; border-radius: 6px; border: 1px solid #c9c9d6;
+             box-shadow: 0 6px 16px rgba(40, 20, 80, 0.18); }
+.num { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%;
+       background: linear-gradient(135deg, #2a56c6, #8f3aff); color: #fff; font-size: 12px; font-weight: 700;
+       font-style: italic; margin-right: 8px; vertical-align: 1px; }
+.titulo-panel { font-weight: 800; font-style: italic; font-size: 15px; color: #26262f; white-space: nowrap; }
+.texto-panel { font-style: italic; font-size: 12.5px; line-height: 1.35; color: #4a4a5c; }
+.dato b { display: block; font-weight: 800; font-style: italic; font-size: 30px; line-height: 1.05; }
+.dato span { font-style: italic; font-size: 13px; color: #4a4a5c; }
 </style>
 </head>
 <body>
-<div style="position: relative; width: 1600px; height: 640px; overflow: hidden; background: #0e1a2b; font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif; color: #ffffff">
-<img src="../imagenes/curvas_nivel.png" alt="" style="position: absolute; left: -60px; top: -760px; width: 1720px; height: 2189px; opacity: 0.09">
-<div style="position: absolute; left: 72px; top: 72px; width: 680px; display: flex; flex-direction: column; gap: 22px">
-<div style="font-family: 'IBM Plex Mono', Consolas, monospace; font-size: 13px; letter-spacing: 0.14em; color: #f2a65a">TRABAJO FINAL / GEOCOMPUTACIÓN 1GEO20 / PUCP 2026-II</div>
-<h1 style="margin: 0; font-family: 'IBM Plex Sans Condensed', 'Arial Narrow', sans-serif; font-weight: 600; font-size: 66px; line-height: 1.02; letter-spacing: -0.01em">Prospectivity for<br><span style="color: #f2a65a">"U - REE"</span> - Peru Central</h1>
-<p style="margin: 0; max-width: 600px; font-size: 20px; line-height: 1.45; color: #c9d3df; text-wrap: pretty">¿Coinciden los datos públicos? Validación de fuentes de gravimetría y de uranio en roca en la Cordillera Oriental de Junín y Pasco.</p>
-<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; margin-top: 10px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,0.16)">
-<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-family: 'IBM Plex Sans Condensed', 'Arial Narrow', sans-serif; font-size: 30px; font-weight: 600; white-space: nowrap">192</span><span style="font-size: 13px; line-height: 1.35; color: #9fb0c3">estaciones gravimétricas</span></div>
-<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-family: 'IBM Plex Sans Condensed', 'Arial Narrow', sans-serif; font-size: 30px; font-weight: 600; white-space: nowrap">5</span><span style="font-size: 13px; line-height: 1.35; color: #9fb0c3">fuentes de U en roca</span></div>
-<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-family: 'IBM Plex Sans Condensed', 'Arial Narrow', sans-serif; font-size: 30px; font-weight: 600; white-space: nowrap">15 400 km²</span><span style="font-size: 13px; line-height: 1.35; color: #9fb0c3">área de estudio</span></div>
-<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-family: 'IBM Plex Sans Condensed', 'Arial Narrow', sans-serif; font-size: 30px; font-weight: 600; white-space: nowrap">1991-2024</span><span style="font-size: 13px; line-height: 1.35; color: #9fb0c3">periodo de los datos</span></div>
-</div>
-</div>
-<div style="position: absolute; left: 72px; top: 528px; width: 680px; display: flex; flex-direction: column; gap: 6px">
-<div style="font-size: 16px; font-weight: 500">Carlos Manuel Gutiérrez Cruzado  /  Félix Bryan Cordero Escobar</div>
-<div style="font-size: 14px; color: #9fb0c3">Pontificia Universidad Católica del Perú, Lima</div>
-</div>
-<div style="position: absolute; left: 1392px; top: 70px; width: 56px; text-align: right; font-family: 'IBM Plex Mono', Consolas, monospace; font-size: 11px; letter-spacing: 0.12em; color: #9fb0c3">PERÚ</div>
-<img src="../imagenes/ubicacion.png" alt="Ubicación del área de estudio en el Perú" style="position: absolute; left: 1458px; top: 34px; width: 70px; height: 95px">
-<div style="position: absolute; left: 820px; top: 150px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; width: 708px">
-<figure style="margin: 0; display: flex; flex-direction: column; gap: 12px">
-<img src="../imagenes/relieve.png" alt="Relieve del área de estudio" style="width: 220px; height: 280px; display: block; border: 1px solid rgba(255,255,255,0.18)">
-<figcaption style="display: flex; flex-direction: column; gap: 4px"><span style="font-family: 'IBM Plex Mono', Consolas, monospace; font-size: 12px; letter-spacing: 0.1em; color: #f2a65a">01  RELIEVE</span><span style="font-size: 13px; color: #c9d3df">Copernicus DEM GLO-90</span></figcaption>
-</figure>
-<figure style="margin: 0; display: flex; flex-direction: column; gap: 12px">
-<img src="../imagenes/bouguer.png" alt="Anomalía de Bouguer del modelo XGM2019e con las estaciones de INGEMMET" style="width: 220px; height: 280px; display: block; border: 1px solid rgba(255,255,255,0.18)">
-<figcaption style="display: flex; flex-direction: column; gap: 4px"><span style="font-family: 'IBM Plex Mono', Consolas, monospace; font-size: 12px; letter-spacing: 0.1em; color: #f2a65a">02  ANOMALÍA DE BOUGUER</span><span style="font-size: 13px; color: #c9d3df">XGM2019e y estaciones de INGEMMET</span></figcaption>
-</figure>
-<figure style="margin: 0; display: flex; flex-direction: column; gap: 12px">
-<img src="../imagenes/uranio.png" alt="Muestras de roca con uranio, por fuente" style="width: 220px; height: 280px; display: block; border: 1px solid rgba(255,255,255,0.18)">
-<figcaption style="display: flex; flex-direction: column; gap: 4px"><span style="font-family: 'IBM Plex Mono', Consolas, monospace; font-size: 12px; letter-spacing: 0.1em; color: #f2a65a">03  U EN ROCA</span><span style="font-size: 13px; color: #c9d3df">606 rocas de cinco fuentes</span></figcaption>
-</figure>
-</div>
+<div class="lienzo">
+  <!-- Panel oscuro: título -->
+  <div style="position: absolute; left: 64px; top: 58px; width: 560px;">
+    <div class="mono" style="font-size: 12px; color: #c9a7ff;">TRABAJO FINAL / GEOCOMPUTACIÓN 1GEO20 / PUCP 2026-II</div>
+    <h1 style="margin-top: 22px;">Prospectivity for<br><span class="lavanda">"U - REE"</span><br>Peru Central</h1>
+    <p style="margin: 22px 0 0; width: 540px; font-style: italic; font-size: 17px; line-height: 1.5; color: #ddd7ee;
+              text-shadow: 0 1px 8px rgba(10, 6, 24, 0.8);">
+      Del dato público al blanco de exploración: validación de fuentes, 40 variables integradas y cinco modelos de
+      aprendizaje automático para uranio y tierras raras en la Cordillera Oriental de Junín y Pasco.</p>
+  </div>
+  <div style="position: absolute; left: 64px; top: 520px; text-shadow: 0 1px 8px rgba(10, 6, 24, 0.8);">
+    <div style="font-weight: 700; font-size: 16px;">Carlos Manuel Gutiérrez Cruzado &nbsp;/&nbsp; Félix Bryan Cordero Escobar</div>
+    <div style="font-style: italic; font-size: 14px; color: #c3bcd9; margin-top: 4px;">Pontificia Universidad Católica del Perú, Lima</div>
+  </div>
+
+  <!-- Área clara: mapas -->
+  <div class="mono" style="position: absolute; left: 760px; top: 42px; font-size: 12px; color: #6a4fc0;">CORDILLERA ORIENTAL / JUNÍN Y PASCO / 15 400 KM²</div>
+  <div class="panel" style="left: 760px; top: 96px;">
+    <img src="../imagenes/relieve.png" alt="Relieve">
+    <div class="titulo-panel"><span class="num">1</span>Relieve</div>
+    <div class="texto-panel">Copernicus DEM GLO-90</div>
+  </div>
+  <div class="panel" style="left: 952px; top: 96px;">
+    <img src="../imagenes/bouguer.png" alt="Anomalía de Bouguer">
+    <div class="titulo-panel"><span class="num">2</span>Gravedad</div>
+    <div class="texto-panel">XGM2019e y 192 estaciones de INGEMMET</div>
+  </div>
+  <div class="panel" style="left: 1144px; top: 96px;">
+    <img src="../imagenes/uranio.png" alt="Uranio en roca">
+    <div class="titulo-panel"><span class="num">3</span>U en roca</div>
+    <div class="texto-panel">606 rocas de cinco fuentes</div>
+  </div>
+  <div class="panel" style="left: 1336px; top: 96px;">
+    <img src="../imagenes/zonas.png" alt="Zonas prioritarias">
+    <div class="titulo-panel"><span class="num">4</span>Zonas prioritarias</div>
+    <div class="texto-panel">Consenso de cinco modelos para U y ΣREE</div>
+  </div>
+  <div style="position: absolute; left: 780px; top: 440px; display: flex; gap: 46px;">
+    <div class="dato"><b class="degradado">794</b><span>rocas analizadas</span></div>
+    <div class="dato"><b class="degradado">40</b><span>variables integradas</span></div>
+    <div class="dato"><b class="degradado">5</b><span>algoritmos y su consenso</span></div>
+    <div class="dato"><b class="degradado">73 km²</b><span>zona prioritaria U + REE</span></div>
+  </div>
 </div>
 </body>
 </html>

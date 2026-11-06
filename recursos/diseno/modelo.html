@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Modelos de prospectividad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans+Condensed:wght@500;600&amp;family=IBM+Plex+Sans:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.dato{display:flex;flex-direction:column;gap:8px;padding-top:16px;border-top:2px solid #14213d}
+.etq{font-family:'IBM Plex Mono',Consolas,monospace;font-size:12px;letter-spacing:0.12em;color:#b45309}
+.num{font-family:'IBM Plex Sans Condensed','Arial Narrow',sans-serif;font-size:50px;font-weight:600;line-height:1}
+.txt{font-size:15px;line-height:1.5;color:#4a5a6e;text-wrap:pretty}
+.ley{display:flex;align-items:center;gap:8px;font-size:13px;color:#4a5a6e}
+.ley span{display:inline-block;width:14px;height:14px;border-radius:3px}
+</style>
+</head>
+<body>
+<div style="position: relative; width: 1600px; height: 620px; overflow: hidden; background: #f3f5f8; font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif; color: #14213d">
+<div style="position: absolute; left: 76px; top: 56px; font-family: 'IBM Plex Sans Condensed', 'Arial Narrow', sans-serif; font-size: 30px; font-weight: 600">Modelos de prospectividad</div>
+<div style="position: absolute; left: 76px; top: 100px; font-family: 'IBM Plex Mono', Consolas, monospace; font-size: 13px; letter-spacing: 0.08em; color: #5b6b7f">GC04 / 40 VARIABLES / 5 ALGORITMOS / VALIDACIÓN POR BLOQUES DE 32 KM</div>
+<div style="position: absolute; left: 76px; top: 160px; width: 980px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 40px">
+<div class="dato"><span class="etq">URANIO</span><span class="num">0,75 <span style="font-size:24px;color:#5b6b7f">frente a 0,61</span></span><span class="txt">ROC-AUC del Random Forest frente a la línea base geológica; 3 de 5 algoritmos superan al mapa geológico.</span></div>
+<div class="dato"><span class="etq">TIERRAS RARAS</span><span class="num">0,74 <span style="font-size:24px;color:#5b6b7f">frente a 0,52</span></span><span class="txt">ROC-AUC del Gradient Boosting; los 5 algoritmos tienen habilidad y el mapa geológico casi no explica las REE.</span></div>
+<div class="dato"><span class="etq">SEÑAL COMÚN</span><span class="num">Be + Bouguer</span><span class="txt">El Be de los sedimentos y la anomalía de Bouguer de XGM2019e son las dos variables principales del U en los cinco modelos.</span></div>
+<div class="dato"><span class="etq">PRODUCTO</span><span class="num">73 km²</span><span class="txt">Clase A para U y tierras raras a la vez (0,5 % del área); 16 km² donde coinciden todos los modelos, entre San Ramón y La Merced.</span></div>
+</div>
+<img src="../imagenes/zonas.png" alt="Zonas prioritarias para uranio y tierras raras" style="position: absolute; left: 1130px; top: 56px; width: 390px; height: 496px; border: 1px solid #cfd6df">
+<div style="position: absolute; left: 1130px; top: 562px; width: 400px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 12px">
+<div class="ley"><span style="background:#79326e"></span>U y ΣREE (A y A)</div>
+<div class="ley"><span style="background:#bd5888"></span>Una en A, otra en B</div>
+<div class="ley"><span style="background:#f7aa5f"></span>Solo uranio</div>
+<div class="ley"><span style="background:#a79acd"></span>Solo tierras raras</div>
+</div>
+</div>
+</body>
+</html>
