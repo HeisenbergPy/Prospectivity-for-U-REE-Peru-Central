@@ -1,6 +1,6 @@
 # **Prospectivity for "U - REE" - Peru Central**
 
-![Prospectivity for "U - REE" - Peru Central](recursos/portada.png)
+![Prospectivity for "U - REE" - Peru Central](recursos/portada.svg)
 
 [![Pruebas](https://github.com/HeisenbergPy/Prospectivity-for-U-REE-Peru-Central/actions/workflows/pruebas.yml/badge.svg)](https://github.com/HeisenbergPy/Prospectivity-for-U-REE-Peru-Central/actions/workflows/pruebas.yml)
 [![Mapa interactivo](https://img.shields.io/badge/mapa-interactivo-2a9d8f?logo=leaflet&logoColor=white)](https://heisenbergpy.github.io/Prospectivity-for-U-REE-Peru-Central/)

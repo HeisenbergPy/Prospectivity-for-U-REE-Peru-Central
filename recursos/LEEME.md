@@ -5,6 +5,7 @@
 | `paneles.py` | Genera en `imagenes/` los mapas sin ejes de los diseños (`*_violeta.png`: relieve, anomalía de Bouguer, U en roca y zonas prioritarias, en tonos violeta); el de zonas lee `resultados/`, así que se ejecuta después de GC04 |
 | `marco.py` | Genera en `imagenes/` los fondos de la portada y de la vista previa: panel oscuro con curvas de nivel reales del área en morado, línea gris biselada y esquina con degradado (la estética de las presentaciones del proyecto) |
 | `diseno/portada.html` | Portada del README |
+| `animar_portada.py` | Genera `portada.svg`, la portada del README: `portada.png` con pulsos de luz animados que recorren las curvas de nivel del panel oscuro (sin pasar sobre los textos) y un brillo lento en la esquina morada |
 | `imagenes/logo_andeanx.png`, `imagenes/logo_pucp.png` | Logos de AndeanX y de la PUCP de la portada (fondo blanco convertido en transparente) |
 | `diseno/flujo.html` | Diagrama del flujo de trabajo del repositorio |
 | `diseno/resultados.html` | Resultados principales de GC02 y GC03 |
@@ -31,6 +32,12 @@ SIL Open Font License). Las cifras de `resultados.html` provienen de los cuadern
 
    ```bash
    msedge --headless=new --hide-scrollbars --force-device-scale-factor=2 --virtual-time-budget=8000 --window-size=1600,640 --screenshot=portada.png diseno/portada.html
+   ```
+
+3. Portada animada (después de exportar `portada.png`):
+
+   ```bash
+   uv run python recursos/animar_portada.py
    ```
 
    | Página | Tamaño (px) |
