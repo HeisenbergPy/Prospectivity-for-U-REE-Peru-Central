@@ -1,11 +1,10 @@
-"""Fondos de las imágenes del README con la estética de las presentaciones del proyecto: panel oscuro con curvas de
+"""Fondos de la portada y de la vista previa con la estética de las presentaciones del proyecto: panel oscuro con curvas de
 nivel reales del área (DEM Copernicus GLO-90 alrededor de San Ramón) en morado luminoso, línea gris biselada que lo
 separa del área clara y esquina con degradado morado.
 
 Genera en `recursos/imagenes/`:
     marco_portada.png      1600 × 640 (guardada al doble), para diseno/portada.html
     marco_vista_previa.png 1280 × 640 (guardada al doble), para diseno/vista_previa.html
-    marco_perfil.png       1600 × 400 (guardada al doble), para el encabezado del perfil de GitHub
 
 Uso, desde la carpeta del repositorio:
     uv run python recursos/marco.py
@@ -131,5 +130,3 @@ if __name__ == '__main__':
           [(1330, -20), (1620, -20), (1620, 660), (1330, 660)], 'marco_portada.png')
     marco(1280, 640, [(560, -10), (610, 370), (575, 450), (650, 560), (1060, 626), (1290, 530)],
           [(1060, -20), (1300, -20), (1300, 660), (1060, 660)], 'marco_vista_previa.png')
-    marco(1600, 400, [(720, -10), (760, 230), (735, 290), (800, 350), (1380, 390), (1610, 318)],
-          [(1380, -20), (1620, -20), (1620, 420), (1380, 420)], 'marco_perfil.png')

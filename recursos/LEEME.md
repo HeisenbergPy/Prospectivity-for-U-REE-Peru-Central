@@ -2,15 +2,14 @@
 
 | Archivo | Contenido |
 |---|---|
-| `paneles.py` | Genera en `imagenes/` los mapas sin ejes que usan los diseños (ubicación, relieve, anomalía de Bouguer, U en roca, curvas de nivel, favorabilidad del U y zonas prioritarias); las dos últimas leen `resultados/`, así que se ejecuta después de GC04 |
-| `marco.py` | Genera en `imagenes/` los fondos de la portada, de la vista previa y del encabezado del perfil: panel oscuro con curvas de nivel reales del área en morado, línea gris biselada y esquina con degradado (la estética de las presentaciones del proyecto) |
+| `paneles.py` | Genera en `imagenes/` los mapas sin ejes de los diseños (`*_violeta.png`: relieve, anomalía de Bouguer, U en roca y zonas prioritarias, en tonos violeta); el de zonas lee `resultados/`, así que se ejecuta después de GC04 |
+| `marco.py` | Genera en `imagenes/` los fondos de la portada y de la vista previa: panel oscuro con curvas de nivel reales del área en morado, línea gris biselada y esquina con degradado (la estética de las presentaciones del proyecto) |
 | `diseno/portada.html` | Portada del README |
 | `imagenes/logo_andeanx.png`, `imagenes/logo_pucp.png` | Logos de AndeanX y de la PUCP de la portada (fondo blanco convertido en transparente) |
 | `diseno/flujo.html` | Diagrama del flujo de trabajo del repositorio |
 | `diseno/resultados.html` | Resultados principales de GC02 y GC03 |
 | `diseno/modelo.html` | Resultados de los modelos de prospectividad (GC04) |
 | `diseno/vista_previa.html` | Imagen para compartir el repositorio (vista previa de GitHub, 1280 × 640) |
-| `imagenes/*_violeta.png` | Relieve, gravedad, U en roca y zonas prioritarias en tonos violeta (los usa la portada) |
 | `portada.png`, `flujo.png`, `resultados.png`, `modelo.png` | Exportación de las páginas anteriores (resolución 2x) |
 | `vista_previa.jpg` | Exportación de `vista_previa.html` a 1280 × 640 (menos de 1 MB, como pide GitHub) |
 
